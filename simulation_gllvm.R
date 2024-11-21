@@ -5,7 +5,6 @@ library(MASS)
 library(ecoCopula)
 library(mvtnorm)
 library(distributions3)
-#source("C:/users/twq/Desktop/phd 论文资料/clvm.R")
 source("clvm.R")
 library(ggplot2)
 library(robCompositions)
@@ -22,7 +21,7 @@ fit_gllvm <- function(data, m_species) {
 
   true_ords <- true_mod$lvs
 
-  # 返回潜在变量
+
   return(list(true_mod = true_mod, true_ords = true_ords))
 }
 
@@ -124,16 +123,11 @@ dim(data)
 # amount of zeros in each column
 apply(data == 0, 2, sum)
 
-# a) species/col = 50
-gllvm_50 <- fit_gllvm(data, m_species = 50)
 
-sim50_gllvm <- sim_gllvm(gllvm_50, rep_k = 50)
 
-# Save the results
-write.table(sim50_gllvm, file = "sim50_gllvm.txt")
-
-# Do the simulation
+# Do the simulation and save the results
 # select first m microbes; need to cycle through 50, 100, 200, 400
+
 # a) species/col = 50
 gllvm_50 <- fit_gllvm(data, m_species = 50)
 
@@ -146,7 +140,7 @@ gllvm100 <- fit_gllvm(data, m_species = 100)
 
 sim100_gllvm <- sim_gllvm(gllvm_100, rep_k = 50)
 
-# Save the results
+
 write.table(sim100_gllvm, file = "sim100_gllvm.txt")
 
 # c) species/col = 200
@@ -154,12 +148,12 @@ gllvm_200 <- fit_gllvm(data, m_species = 200)
 
 sim200_gllvm <- sim_gllvm(gllvm_200, rep_k = 50)
 
-write.table(sim50_gllvm, file = "sim50_gllvm.txt")
+write.table(sim200_gllvm, file = "sim200_gllvm.txt")
 
 # d) species/col =400
 gllvm_400 <- fit_gllvm(data, m_species = 400)
 
 sim400_gllvm <- sim_gllvm(gllvm_400, rep_k = 50)
 
-# Save the results
+
 write.table(sim400_gllvm, file = "sim400_gllvm.txt")
