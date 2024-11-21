@@ -5,19 +5,21 @@ library(MASS)
 library(ecoCopula)
 library(mvtnorm)
 library(distributions3)
-source("clvm.R")
+#source("clvm.R")
+
+source("C:/users/twq/Desktop/phd 论文资料/clvm.R")
 library(ggplot2)
 library(robCompositions)
 library(gllvm)
 
 
 # fit the ZINB_gllvm model with subset of data to obtain true model and true ordinations.
-fit_gllvm <- function(data, m_species) {
+fit_gllvm <- function(data, m_species,seed_NO) {
   # Select the first m microbiome data
   y <- data[, 1:m_species]
 
 
-  true_mod <- gllvm(y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed")
+  true_mod <- gllvm(y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed",seed = seed_NO)
 
   true_ords <- true_mod$lvs
 
@@ -38,7 +40,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     set.seed(k)
 
     # Simulate the microbiome data using the true gllvm model
-    sim_y <- simulate.gllvm(true_mod, conditional = TRUE)
+    sim_y <- simulate.gllvm(true_mod, conditional = TRUE, seed = k)
 
 
     # fit the 6 methods with simulated y and calculate the Procrustes distance
@@ -79,7 +81,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     }
 
     # Ordination base on GLLVM model with ZINB distribution
-    lvm_ZINB <- try(gllvm(sim_y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed", num.lv = 2))
+    lvm_ZINB <- try(gllvm(sim_y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed", num.lv = 2, seed = k))
     lvm_ZINB_ords <- lvm_ZINB$lvs
     p_lvm1 <- try(procrustes(true_ords, lvm_ZINB_ords)$ss)
     if (class(p_lvm1)[1] == "try-error") {
@@ -90,7 +92,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
 
 
     # GLLVM with NB distribution
-    lvm_NB <- try(gllvm(sim_y, family = "negative.binomial", sd.errors = FALSE, row.eff = "fixed", num.lv = 2))
+    lvm_NB <- try(gllvm(sim_y, family = "negative.binomial", sd.errors = FALSE, row.eff = "fixed", num.lv = 2, seed = k))
     lvm_NB_ords <- lvm_NB$lvs
     p_lvm2 <- try(procrustes(true_ords, lvm_NB_ords)$ss)
     if (class(p_lvm2)[1] == "try-error") {
@@ -129,7 +131,7 @@ apply(data == 0, 2, sum)
 # select first m microbes; need to cycle through 50, 100, 200, 400
 
 # a) species/col = 50
-gllvm_50 <- fit_gllvm(data, m_species = 50)
+gllvm_50 <- fit_gllvm(data, m_species = 10, seed_NO = 123)
 
 sim50_gllvm <- sim_gllvm(gllvm_50, rep_k = 50)
 
