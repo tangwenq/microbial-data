@@ -5,21 +5,19 @@ library(MASS)
 library(ecoCopula)
 library(mvtnorm)
 library(distributions3)
-#source("clvm.R")
-
-source("C:/users/twq/Desktop/phd 论文资料/clvm.R")
+source("clvm.R")
 library(ggplot2)
 library(robCompositions)
 library(gllvm)
 
 
 # fit the ZINB_gllvm model with subset of data to obtain true model and true ordinations.
-fit_gllvm <- function(data, m_species,seed_NO) {
+fit_gllvm <- function(data, m_species, seed_NO) {
   # Select the first m microbiome data
   y <- data[, 1:m_species]
 
 
-  true_mod <- gllvm(y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed",seed = seed_NO)
+  true_mod <- gllvm(y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed", seed = seed_NO)
 
   true_ords <- true_mod$lvs
 
@@ -128,17 +126,17 @@ apply(data == 0, 2, sum)
 
 
 # Do the simulation and save the results
-# select first m microbes; need to cycle through 50, 100, 200, 400
+# select first m microbes; need to cycle through 50, 100, 200, 400 with same random seed:123
 
 # a) species/col = 50
-gllvm_50 <- fit_gllvm(data, m_species = 10, seed_NO = 123)
+gllvm_50 <- fit_gllvm(data, m_species = 50, seed_NO = 123)
 
 sim50_gllvm <- sim_gllvm(gllvm_50, rep_k = 50)
 
 write.table(sim50_gllvm, file = "sim50_gllvm.txt")
 
 # b) species/col = 100
-gllvm100 <- fit_gllvm(data, m_species = 100)
+gllvm_100 <- fit_gllvm(data, m_species = 100, seed_NO = 123)
 
 sim100_gllvm <- sim_gllvm(gllvm_100, rep_k = 50)
 
@@ -146,14 +144,14 @@ sim100_gllvm <- sim_gllvm(gllvm_100, rep_k = 50)
 write.table(sim100_gllvm, file = "sim100_gllvm.txt")
 
 # c) species/col = 200
-gllvm_200 <- fit_gllvm(data, m_species = 200)
+gllvm_200 <- fit_gllvm(data, m_species = 200, seed_NO = 123)
 
 sim200_gllvm <- sim_gllvm(gllvm_200, rep_k = 50)
 
 write.table(sim200_gllvm, file = "sim200_gllvm.txt")
 
 # d) species/col =400
-gllvm_400 <- fit_gllvm(data, m_species = 400)
+gllvm_400 <- fit_gllvm(data, m_species = 400, seed_NO = 123)
 
 sim400_gllvm <- sim_gllvm(gllvm_400, rep_k = 50)
 
