@@ -63,7 +63,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     }
 
     # Ordination base on Copula with ZINB distribution
-    c_ZINB <- try(clvm(sim_y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
+    c_ZINB <- try(fit_copula(sim_y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
     c_ZINB_ords <- scale(c_ZINB$scores)
     p_cord1 <- try(procrustes(true_ords, c_ZINB_ords)$ss)
     if (class(p_cord1)[1] == "try-error") {
@@ -71,7 +71,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     }
 
     # Copula with NB distribtuion
-    c_NB <- try(clvm(sim_y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
+    c_NB <- try(fit_copula(sim_y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
     c_NB_ords <- scale(c_NB$scores)
     p_cord2 <- try(procrustes(true_ords, c_NB_ords)$ss)
     if (class(p_cord2)[1] == "try-error") {
