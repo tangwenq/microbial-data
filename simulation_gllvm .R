@@ -5,7 +5,8 @@ library(MASS)
 library(ecoCopula)
 library(mvtnorm)
 library(distributions3)
-source("clvm.R")
+#source("clvm.R")
+source("//fileservices.ad.jyu.fi/homes/wentang/Downloads/clvm2.R")
 library(ggplot2)
 library(robCompositions)
 library(gllvm)
@@ -38,7 +39,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     set.seed(k)
 
     # Simulate the microbiome data using the true gllvm model
-    sim_y <- simulate.gllvm(true_mod, conditional = TRUE, seed = k)
+    sim_y <- simulate.gllvm(true_mod, conditional = TRUE)
 
 
     # fit the 6 methods with simulated y and calculate the Procrustes distance
@@ -63,7 +64,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     }
 
     # Ordination base on Copula with ZINB distribution
-    c_ZINB <- try(clvm(sim_y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE))
+    c_ZINB <- try(clvm(sim_y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
     c_ZINB_ords <- scale(c_ZINB$scores)
     p_cord1 <- try(procrustes(true_ords, c_ZINB_ords)$ss)
     if (class(p_cord1)[1] == "try-error") {
@@ -71,7 +72,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     }
 
     # Copula with NB distribtuion
-    c_NB <- try(clvm(sim_y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE))
+    c_NB <- try(clvm(sim_y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
     c_NB_ords <- scale(c_NB$scores)
     p_cord2 <- try(procrustes(true_ords, c_NB_ords)$ss)
     if (class(p_cord2)[1] == "try-error") {
@@ -79,7 +80,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     }
 
     # Ordination base on GLLVM model with ZINB distribution
-    lvm_ZINB <- try(gllvm(sim_y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed", num.lv = 2, seed = k))
+    lvm_ZINB <- try(gllvm(sim_y, family = "ZINB", sd.errors = FALSE, row.eff = "fixed", num.lv = 2, seed = 123))
     lvm_ZINB_ords <- scale(lvm_ZINB$lvs)
     p_lvm1 <- try(procrustes(true_ords, lvm_ZINB_ords)$ss)
     if (class(p_lvm1)[1] == "try-error") {
@@ -90,7 +91,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
 
 
     # GLLVM with NB distribution
-    lvm_NB <- try(gllvm(sim_y, family = "negative.binomial", sd.errors = FALSE, row.eff = "fixed", num.lv = 2, seed = k))
+    lvm_NB <- try(gllvm(sim_y, family = "negative.binomial", sd.errors = FALSE, row.eff = "fixed", num.lv = 2, seed = 123))
     lvm_NB_ords <- scale(lvm_NB$lvs)
     p_lvm2 <- try(procrustes(true_ords, lvm_NB_ords)$ss)
     if (class(p_lvm2)[1] == "try-error") {
