@@ -12,11 +12,11 @@ library(gllvm)
 
 
 # fit the ZINB_copula model with subset of data to obtain true model and true ordinations.
-fit_copula <- function(data, m_species) {
+fit_ZINBcopula <- function(data, m_species) {
   # Select the first m microbiome data
   y <- data[, 1:m_species]
   
-  true_mod <- clvm(y, reff = "fixed", gllvm.fam = "ZINB", seed = 123, lv.n = 0)
+  true_mod <- fit_copula(y, reff = "fixed", gllvm.fam = "ZINB", seed = 123, lv.n = 0)
 
  
   
@@ -39,7 +39,7 @@ sim_copula <- function(copula_m, rep_k) {
     set.seed(k)
     
     # Simulate the microbiome data using the true copula model
-    sim_y <-  simulate.copula(true_mod)
+    sim_y <-  simulate_copula(true_mod)
     
    
     # fit the 6 methods with simulated y and calculate the Procrustes distance
@@ -64,7 +64,7 @@ sim_copula <- function(copula_m, rep_k) {
     }
     
     # Ordination base on Copula with ZINB distribution
-    c_ZINB <- try(clvm(sim_y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
+    c_ZINB <- try(fit_copula(sim_y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
     c_ZINB_ords <- scale(c_ZINB$scores)
     p_cord1 <- try(procrustes(true_ords, c_ZINB_ords)$ss)
     if (class(p_cord1)[1] == "try-error") {
@@ -72,7 +72,7 @@ sim_copula <- function(copula_m, rep_k) {
     }
     
     # Copula with NB distribtuion
-    c_NB <- try(clvm(sim_y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
+    c_NB <- try(fit_copula(sim_y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0))
     c_NB_ords <- scale(c_NB$scores)
     p_cord2 <- try(procrustes(true_ords, c_NB_ords)$ss)
     if (class(p_cord2)[1] == "try-error") {
@@ -131,14 +131,14 @@ apply(data == 0, 2, sum)
 # 
 
 # a) species/col = 50
-copula_50 <- fit_copula(data, m_species = 50)
+copula_50 <- fit_ZINBcopula(data, m_species = 50)
 
 sim50_copula <- sim_copula(copula_50, rep_k = 50)
 
 write.table(sim50_copula, file = "sim50_copula.txt")
 
 # b) species/col = 100
-copula_100 <- fit_copula(data, m_species = 100)
+copula_100 <- fit_ZINBcopula(data, m_species = 100)
 
 sim100_copula <- sim_copula(copula_100, rep_k = 50)
 
@@ -146,14 +146,14 @@ sim100_copula <- sim_copula(copula_100, rep_k = 50)
 write.table(sim100_copula, file = "sim100_copula.txt")
 
 # c) species/col = 200
-copula_200 <- fit_copula(data, m_species = 200)
+copula_200 <- fit_ZINBcopula(data, m_species = 200)
 
 sim200_copula <- sim_copula(copula_200, rep_k = 50)
 
 write.table(sim200_copula, file = "sim200_copula.txt")
 
 # d) species/col =400
-copula_400 <- fit_copula(data, m_species = 400)
+copula_400 <- fit_ZINBcopula(data, m_species = 400)
 sim400_copula <- sim_copula(copula_400, rep_k = 50)
 
 
