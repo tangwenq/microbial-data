@@ -166,7 +166,7 @@ simulate_copula <- function(make_cordobject) {
 
   # Simulate data from a Negative Binomial (NB) model
   if (true.mod$obj$family == "negative.binomial") {
-    sig <- true.mod$sigma[[1]] # Covariance matrix
+    sig <- true.mod$sigma # Covariance matrix
     eta <- t(replicate(n, true.mod$obj$params$beta0)) + c(0, true.mod$obj$params$row.params) # Linear predictor
     phi.inv <- t(replicate(n, true.mod$obj$params$inv.phi)) # Inverse dispersion parameter
     true.load <- as.matrix(true.mod$loadings) # Factor loadings matrix
@@ -181,7 +181,7 @@ simulate_copula <- function(make_cordobject) {
 
   # Simulate data from a Zero-Inflated Negative Binomial (ZINB) model
   if (true.mod$obj$family == "ZINB") {
-    sig <- true.mod$sigma[[1]] # Covariance matrix
+    sig <- true.mod$sigma # Covariance matrix
     eta <- t(replicate(n, true.mod$obj$params$beta0)) + c(0, true.mod$obj$params$row.params) # Linear predictor
     phi.inv <- t(replicate(nrow(as.data.frame(true.mod$obj$data)), true.mod$obj$params$ZINB.inv.phi)) # Inverse dispersion
     probs <- t(replicate(n, true.mod$obj$params$phi)) # Zero-inflation probabilities
