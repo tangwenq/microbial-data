@@ -11,7 +11,10 @@ Source of copula code
 
 The main functions are:
 
-- ...
+- `clvm.R`
+- `simulation_copula.R`
+- `simulation_gllvm.R`
+- `visualization.R`
 
 **Authors**
 
