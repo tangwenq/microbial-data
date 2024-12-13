@@ -30,8 +30,8 @@ sim_gllvm <- function(gllvm_m, rep_k) {
   true_ords <- gllvm_m$true_ords
 
   # Create an empty matrix to store Procrustes errors
-  pro.errors <- matrix(NA, rep_k, 6)
-  colnames(pro.errors) <- c("C-ZINB", "C-NB", "LVM-ZINB", "LVM-NB", "CLR+PCA", "nMDS")
+  pro.errors <- matrix(NA, rep_k, 7)
+  colnames(pro.errors) <- c("C-ZINB", "C-NB", "LVM-ZINB", "LVM-NB", "CLR+PCA", "CLR+nMDS", "nMDS")
 
   for (k in 1:rep_k) {
     print(k)
@@ -52,8 +52,16 @@ sim_gllvm <- function(gllvm_m, rep_k) {
       p_mds <- NA
     }
 
-    # PCA on CLR-transformed data
+    # PCA and nMDS on CLR-transformed data
     clr_y <- cenLR(sim_y + 1) # CLR transformation of sim_y with added 1
+
+    fit_clrmds <- try(metaMDS(clr_y$x.clr, distance = "euclidean", autotransform = FALSE, noshare = FALSE, wascores = FALSE, trace = FALSE))
+    clrmds_ords <- scale(fit_clrmds$points)
+    p_clrmds <- try(procrustes(true_ords, clrmds_ords)$ss)
+    if (class(p_clrmds)[1] == "try-error") {
+      p_clrmds <- NA
+    }
+
     fit_pca <- prcomp(clr_y$x.clr, scale = TRUE) # PCA on the CLR-transformed data clr_y
     pca_ords <- scale(fit_pca$x[, 1:2]) # extract simluated ordinations from PCA
 
@@ -101,7 +109,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
 
 
     # Store the Procrustes errors for k simulation
-    pro.errors[k, ] <- c(p_cord1, p_cord2, p_lvm1, p_lvm2, p_pca, p_mds)
+    pro.errors[k, ] <- c(p_cord1, p_cord2, p_lvm1, p_lvm2, p_pca, p_clrmds, p_mds)
     print(pro.errors[k, ])
   }
   return(pro.errors)
