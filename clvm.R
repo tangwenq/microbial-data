@@ -1,6 +1,6 @@
 # Define main function for model-based ordination using copulas with Zero-Inflated Negative Binomial(ZINB) models via gllvm
 
-fit_copula <- function(data, X=X, gllvm.fam = "ZINB", reff = FALSE, lv.n = 0, sd.errors = FALSE, seed = NULL)
+fit_copula <- function(data, X, gllvm.fam = "ZINB", reff = FALSE, lv.n = 0, sd.errors = FALSE, seed = NULL)
 # Set Random Seed to ensures reproducibility.
 {
   if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
