@@ -109,13 +109,13 @@ lvmZINB_model <- gllvm(
 save(lvmZINB_model, file = "lvmZINB_model.RData") # Save ZINB model
 
 # Fit copula models
-cNB_model <- clvm(data,
+cNB_model <- fit_copula(data,
   X = X, reff = "fixed", gllvm.fam = "negative.binomial",
   sd.errors = TRUE, seed = 123, lv.n = 0
 ) # Copula NB model
 save(cNB_model, file = "cNB_model.RData") # Save copula NB model
 
-cZINB_model <- clvm(data,
+cZINB_model <- fit_copula(data,
   X = X, reff = "fixed", gllvm.fam = "ZINB",
   sd.errors = TRUE, seed = 123, lv.n = 0
 ) # Copula ZINB model
