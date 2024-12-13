@@ -33,71 +33,86 @@ unlvm_NB <- gllvm(
 save(unlvm_NB, file = "unlvmNB_model.RData") # Save unconstrained model
 
 # Visualize residuals (reproduces Figure 8)
-# Extract deviance residuals from the constrained model
-lvm_res <- residuals(lvm_NB)$residuals
 
-# Save histogram of residuals
-pdf(file = "hist for residuals.pdf", width = 6, height = 6, useDingbats = FALSE)
-hist(lvm_res,
-  main = "Histogram of Residuals", xlab = "Residuals",
-  col = "lightblue", border = "black"
-)
+
+# Plot D-S residuals against linear predictors, shown in left of Figure 8
+pdf(file = "residuals against linear predictors.pdf", width = 9, height = 9, useDingbats = FALSE)
+par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
+plot(lvm_NB, which = 1, caption = " ", var.colors = 1, cex.lab = 1.6, cex = 0.7)
 dev.off()
 
+
 # Save Q-Q plot of residuals
-pdf(file = "qqnorm for residuals.pdf", width = 6, height = 6, useDingbats = FALSE)
-qqnorm(lvm_res)
+pdf(file = "qqnorm_for residuals.pdf", width = 9, height = 9, useDingbats = FALSE)
+par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
+plot(lvm_NB, which = 2, caption = " ", var.colors = 1, cex.lab = 1.5)
 dev.off()
 
 # Ordination plots for constrained and unconstrained models (reproduces Figure 7)
 # Save ordination plot for the unconstrained model
 pdf(file = "unconstrained_ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4, 4, 4, 0) + 0.1) # Set plot margins
-
+par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
 # Draw ordination plot
 ordiplot(unlvm_NB,
   which.lvs = 1:2,
-  s.colors = as.numeric(factor(microbialdata$X$Region)) + 1,
+  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
   rotate = TRUE,
   symbols = TRUE,
-  pch = as.numeric(factor(microbialdata$X$Region)) + 15, # Use solid shapes
-  ylim = c(-2, 4.9)
-) # Adjust ylim to prevent legend overlap
+  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
+  main = "",
+  ann = FALSE
+) # Set symbols based on region
 
-# Extract unique regions and their corresponding symbols and colors
+title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 1.5)
+
+
+# Extract unique regions and symbols
 regions <- unique(microbialdata$X$Region) # Unique region names
-pch_values <- as.numeric(factor(regions)) + 15 # Solid symbols: circle(16), triangle(17), diamond(18)
-colors <- as.numeric(factor(regions)) + 1 # Assign colors to regions
+pch_values <- as.numeric(factor(regions)) + 15 # Define symbols manually: circle (15), triangle (16), plus (17)
+colors <- c("black", "blue", "grey")[as.numeric(factor(regions))] # Set specific colors for each region
 
-# Add legend
-legend("topleft", # Position of legend
-  legend = regions, # Labels for regions
-  pch = pch_values, # Symbols for regions
-  col = colors
-) # Colors for regions
-
+# Define full name of region as new region names
+new_region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
+# Add a legend with specified colors and symbols
+legend("topleft", # Legend position
+  legend = new_region_names, # Legend labels
+  pch = pch_values, # Corresponding symbols
+  col = colors, # Corresponding colors (black, blue, grey)
+  ncol = 3
+) # Arrange legend in 3 columns
 dev.off()
 
 # Save ordination plot for the constrained model
 pdf(file = "ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4, 4, 4, 0) + 0.1) # Set plot margins
+par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
 
 # Draw ordination plot
 ordiplot(lvm_NB,
   which.lvs = 1:2,
-  s.colors = as.numeric(factor(microbialdata$X$Region)) + 1,
+  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
   rotate = TRUE,
   symbols = TRUE,
-  pch = as.numeric(factor(microbialdata$X$Region)) + 15
-) # Use solid shapes
+  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
+  main = "",
+  ann = FALSE
+) # Set symbols based on region
 
-# Add legend
-legend("topleft", # Position of legend
-  legend = regions, # Labels for regions
-  pch = pch_values, # Symbols for regions
-  col = colors
-) # Colors for regions
+title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 1.5)
 
+
+# Extract unique regions and symbols
+regions <- unique(microbialdata$X$Region) # Unique region names
+pch_values <- as.numeric(factor(regions)) + 15 # Define symbols manually: circle (15), triangle (16), plus (17)
+colors <- c("black", "blue", "grey")[as.numeric(factor(regions))] # Set specific colors for each region
+
+
+# Add a legend with specified colors and symbols
+legend("topleft", # Legend position
+  legend = new_region_names, # Legend labels with full name of sample site
+  pch = pch_values, # Corresponding symbols
+  col = colors, # Corresponding colors (black, blue, grey)
+  ncol = 3
+) # Arrange legend in 3 columns
 dev.off()
 
 # Compute AIC and BIC for other models (Table 2)
