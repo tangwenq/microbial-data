@@ -165,3 +165,71 @@ sim400_gllvm <- sim_gllvm(gllvm_400, rep_k = 50)
 
 
 write.table(sim400_gllvm, file = "sim400_gllvm.txt")
+
+
+# Plot Procrustes errors boxplot under each dimension, shown in Figure 3
+
+# Create data frames for each simulation result
+simres50 <- data.frame(err = as.numeric(unlist(sim50_gllvm))) # Convert to numeric and store in a data frame
+simres100 <- data.frame(err = as.numeric(unlist(sim100_gllvm)))
+simres200 <- data.frame(err = as.numeric(unlist(sim200_gllvm)))
+simres400 <- data.frame(err = as.numeric(unlist(sim400_gllvm)))
+
+# Add a 'dimension' column to label each dataset
+simres50$dimension <- "m=50"
+simres100$dimension <- "m=100"
+simres200$dimension <- "m=200"
+simres400$dimension <- "m=400"
+
+# Combine all simulation results into a single data frame
+simres <- rbind(simres50, simres100, simres200, simres400)
+
+# Get the number of rows (simulations) in each dataset
+B <- nrow(sim50_copula)
+
+# Create a vector of method labels for each dataset
+methods <- c(
+  rep("C-ZINB", B), rep("C-NB", B), rep("LVM-ZINB", B),
+  rep("LVM-NB", B), rep("CLR + PCA", B), rep("nMDS", B), rep("CLR + nMDS", B)
+)
+
+# Add the 'method' column to the combined data frame, repeated for each dimension
+simres$method <- rep(methods, times = 4)
+
+# Rename the columns for clarity
+names(simres) <- c("error", "dimension", "method")
+
+# Reorder the levels of the 'dimension' factor for consistent plotting
+simres$dimension <- factor(simres$dimension, levels = c("m=50", "m=100", "m=200", "m=400"))
+
+# Reorder the levels of the 'method' factor for consistent legend and plot ordering
+simres$method <- factor(simres$method, levels = c(
+  "C-NB", "C-ZINB", "LVM-NB", "LVM-ZINB",
+  "CLR + PCA", "CLR + nMDS", "nMDS"
+))
+
+# Save the plot as a PDF
+pdf(file = "gllvm_ZINB.pdf", width = 5, height = 5, useDingbats = FALSE)
+
+# Generate the boxplot using ggplot2
+ggplot(simres, aes(x = method, y = error, fill = method)) +
+  geom_boxplot(alpha = 0.3) + # Add semi-transparent boxplots
+  ylab("Mean Procrustes error (log)") + # Set y-axis label
+  xlab("") + # Remove x-axis label
+  theme_bw() + # Use a clean theme
+  theme(
+    legend.position = "none", # Remove the legend
+    axis.text.x = element_text(angle = 45, hjust = 1), # Rotate x-axis text for readability
+    axis.title.x = element_text(size = 10), # Set x-axis title font size
+    axis.title.y = element_text(size = 10), # Set y-axis title font size
+    axis.text = element_text(size = 8) # Set axis text font size
+  ) +
+  facet_wrap(~dimension, scales = "fixed") + # Create separate plots for each dimension
+  coord_trans(y = "log") + # Apply log transformation to y-axis
+  scale_y_continuous(limits = c(1, 10)) + # Set y-axis limits
+  scale_fill_manual(
+    values = unique(simres$method), guide = "none" # Use unique colors for methods, remove guide
+  )
+
+# Close the PDF device to save the plot
+dev.off()
