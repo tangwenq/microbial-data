@@ -6,7 +6,7 @@ The goal of the project was to compare different unconstraint ordination methods
 
 **Main functions**
 
-All code here is written in R and requires the packages vegan, gllvm, ggplot2, mvtnorm, devtools, mvabund, ecoCoupla, distribution2, robCompositions, reshape2, scales and
+All code here is written in R and requires the packages vegan, gllvm, ggplot2, mvtnorm, devtools, mvabund, ecoCoupla, distribution3, robCompositions, reshape2, scales and
 Source of copula code
 
 The main files are:
