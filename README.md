@@ -6,15 +6,15 @@ The goal of the project was to compare different unconstraint ordination methods
 
 **Main functions**
 
-All code here is written in R and requires the packages vegan, gllvm, ggplot2, mvtnorm, ...
+All code here is written in R and requires the packages vegan, gllvm, ggplot2, mvtnorm, devtools, mvabund, ecoCoupla, distribution2, robCompositions, reshape2, scales and
 Source of copula code
 
 The main files are:
 
-- `clvm.R`: main functions in the file are `clvm` which performs model-based ordination along the lines of Popovic at al. (2022) and `simulate.copula` which simulates responses from a copula model fitted with `clvm`. The functions are modified versions of corresponding functions taken from https://github.com/gordy2x/ecoCopula and from the appendix of Popovic at al. (2022) available at https://doi.org/10.5281/zenodo.5525716.
+- `GCLVM.R`: main functions in the file are `clvm` which performs model-based ordination along the lines of Popovic at al. (2022) and `simulate.copula` which simulates responses from a copula model fitted with `clvm`. The functions are modified versions of corresponding functions taken from https://github.com/gordy2x/ecoCopula and from the appendix of Popovic at al. (2022) available at https://doi.org/10.5281/zenodo.5525716.
 - `simulation_copula.R`
 - `simulation_gllvm.R`
-- `visualization.R`
+- `visualization of data.R`
 
 **Authors**
 
