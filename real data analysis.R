@@ -37,21 +37,45 @@ save(unlvm_NB, file = "unlvmNB_model.RData") # Save unconstrained model
 
 # Plot D-S residuals against linear predictors, shown in left of Figure 8
 pdf(file = "residuals against linear predictors.pdf", width = 9, height = 9, useDingbats = FALSE)
-par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
-plot(lvm_NB, which = 1, caption = " ", var.colors = 1, cex.lab = 1.6, cex = 0.7)
+# Set plot margins
+par(mar = c(6, 6, 0, 0) + 0.1)
+
+# Create the plot
+plot(lvm_NB,
+  which = 1,
+  caption = " ", # Remove the default caption
+  var.colors = 1, # Set color for variables
+  cex.lab = 2.5, # Increase axis label text size
+  cex.axis = 1.5, # Increase axis tick label text size
+  cex.main = 2.5, # Increase main title text size
+  cex = 1
+) # Adjust the size of points or lines in the plot
+
 dev.off()
 
 
 # Save Q-Q plot of residuals
 pdf(file = "qqnorm_for residuals.pdf", width = 9, height = 9, useDingbats = FALSE)
-par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
-plot(lvm_NB, which = 2, caption = " ", var.colors = 1, cex.lab = 1.5)
+# Set plot margins
+par(mar = c(6, 6, 0, 0) + 0.1)
+
+# Create the plot
+plot(lvm_NB,
+  which = 2,
+  caption = " ", # Remove the default caption
+  var.colors = 1, # Set color for variables
+  cex.lab = 2.5, # Increase axis label text size
+  cex.axis = 1.5, # Increase axis tick label text size
+  cex.main = 2.5, # Increase main title text size
+  cex = 1
+) # Adjust the size of points or lines in the plot
+
 dev.off()
 
 # Ordination plots for constrained and unconstrained models (reproduces Figure 7)
 # Save ordination plot for the unconstrained model
 pdf(file = "unconstrained_ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
+par(mar = c(5.3, 5.3, 0, 0) + 0.1) # Set plot margins
 # Draw ordination plot
 ordiplot(unlvm_NB,
   which.lvs = 1:2,
@@ -63,7 +87,7 @@ ordiplot(unlvm_NB,
   ann = FALSE
 ) # Set symbols based on region
 
-title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 1.5)
+title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 2)
 
 
 # Extract unique regions and symbols
@@ -78,13 +102,14 @@ legend("topleft", # Legend position
   legend = new_region_names, # Legend labels
   pch = pch_values, # Corresponding symbols
   col = colors, # Corresponding colors (black, blue, grey)
-  ncol = 3
+  ncol = 3,
+  cex = 1.2
 ) # Arrange legend in 3 columns
 dev.off()
 
 # Save ordination plot for the constrained model
 pdf(file = "ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
+par(mar = c(5.3, 5.3, 0, 0) + 0.1) # Set plot margins
 
 # Draw ordination plot
 ordiplot(lvm_NB,
@@ -97,7 +122,7 @@ ordiplot(lvm_NB,
   ann = FALSE
 ) # Set symbols based on region
 
-title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 1.5)
+title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 2)
 
 
 # Extract unique regions and symbols
@@ -111,8 +136,9 @@ legend("topleft", # Legend position
   legend = new_region_names, # Legend labels with full name of sample site
   pch = pch_values, # Corresponding symbols
   col = colors, # Corresponding colors (black, blue, grey)
-  ncol = 3
-) # Arrange legend in 3 columns
+  ncol = 3, # Arrange legend in 3 columns
+  cex = 1.2
+)
 dev.off()
 
 # Compute AIC and BIC for other models (Table 2)
