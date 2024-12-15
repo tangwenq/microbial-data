@@ -75,7 +75,7 @@ dev.off()
 # Ordination plots for constrained and unconstrained models (reproduces Figure 7)
 # Save ordination plot for the unconstrained model
 pdf(file = "unconstrained_ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(5.3, 5.3, 0, 0) + 0.1) # Set plot margins
+par(mar = c(4.5, 4.5, 0, 0) + 0.1) # Set plot margins
 # Draw ordination plot
 ordiplot(unlvm_NB,
   which.lvs = 1:2,
@@ -87,7 +87,7 @@ ordiplot(unlvm_NB,
   ann = FALSE
 ) # Set symbols based on region
 
-title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 2)
+title(xlab = "ordination score 1", ylab = "ordination score 2", cex.lab = 1.3)
 
 
 # Extract unique regions and symbols
@@ -109,7 +109,7 @@ dev.off()
 
 # Save ordination plot for the constrained model
 pdf(file = "ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(5.3, 5.3, 0, 0) + 0.1) # Set plot margins
+par(mar = c(4.5, 4.5, 0, 0) + 0.1) # Set plot margins
 
 # Draw ordination plot
 ordiplot(lvm_NB,
@@ -122,7 +122,7 @@ ordiplot(lvm_NB,
   ann = FALSE
 ) # Set symbols based on region
 
-title(xlab = "ordination coordinate 1", ylab = "ordination coordinate 2", cex.lab = 2)
+title(xlab = "ordination score 1", ylab = "ordination score 1", cex.lab = 1.3)
 
 
 # Extract unique regions and symbols
@@ -137,7 +137,7 @@ legend("topleft", # Legend position
   pch = pch_values, # Corresponding symbols
   col = colors, # Corresponding colors (black, blue, grey)
   ncol = 3, # Arrange legend in 3 columns
-  cex = 1.2
+  cex = 1.3
 )
 dev.off()
 
