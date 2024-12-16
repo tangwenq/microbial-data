@@ -40,19 +40,14 @@ pdf(file = "overdispersion.pdf", width = 7, height = 6, useDingbats = FALSE)
 # Set plot margins
 par(mar = c(4, 4, 0.5, 0) + 0.1)
 
-regions <- microbialdata$X$Region
-# Extract unique regions and symbols
-regions <- unique(microbialdata$X$Region)  # Unique region names
-pch_values <- as.numeric(factor(regions)) + 15  # Define symbols manually: circle (15), triangle (16), plus (17)
-colors <- c("black", "blue", "grey")[as.numeric(factor(regions))]  # Set specific colors for each region
 
 # Plot mean-variance relationship
 plot(means, variances,
   xlab = "Mean", # X-axis label
   ylab = "Variance", # Y-axis label
-  pch = pch_values, # Point shape based on region
+  pch = 16,
   cex = 0.7, # Point size
-  col = colors, # Point color based on region
+  col = "black, 
   xlim = c(0, 30), # Limit for X-axis
   ylim = c(0, 1000), # Limit for Y-axis
   cex.lab = 1.5, # Label font size
@@ -61,24 +56,16 @@ plot(means, variances,
 ) # Title font size
 
 # Add a Poisson reference line (variance = mean)
-abline(a = 0, b = 1, col = "red", lwd = 2) # Poisson variance line
+abline(a = 0, b = 1, col = "blue", lwd = 2) # Poisson variance line
 
 # Add the Negative Binomial relationship line
 theta <- theta_opt # Use the estimated dispersion parameter
 nb_variance <- means + means^2 * theta # Compute NB variance
 lines(sort(means), sort(nb_variance),
-  col = "red", lwd = 2, lty = 2
+  col = "blue", lwd = 2, lty = 2
 ) # Add the NB variance line (dashed)
 
-# Define full name of region as new region names
-new_region_names <- c("Mayrhofen","Kilpisjarvi","Ny-Alesund")
-# Add a legend with specified colors and symbols
-legend("topleft",                              # Legend position
-       legend = new_region_names,              # Legend labels
-       pch = pch_values,                       # Corresponding symbols
-       col = colors,                           # Corresponding colors (black, blue, grey)
-       ncol = 3,
-       cex = 1.1) 
+
 # Close the PDF device
 dev.off()
 
