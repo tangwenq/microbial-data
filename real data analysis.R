@@ -146,4 +146,4 @@ save(lvmZINB_model, file = "lvmZINB_model.RData") # Save ZINB model
 # Fit unconstrained gllvm model with zero-inflated negative binomial (ZINB)
 
 unlvmZINB_model<- gllvm(y = data , family = "ZINB", sd.errors = TRUE, row.eff = "fixed",seed = 123)
-save(lvmZINB_model, file = "unlvmZINB_model.RData") # Save ZINB model
+save(unlvmZINB_model, file = "unlvmZINB_model.RData") # Save ZINB model
