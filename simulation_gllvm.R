@@ -31,7 +31,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
 
   # Create an empty matrix to store Procrustes errors
   pro.errors <- matrix(NA, rep_k, 7)
-  colnames(pro.errors) <- c("C-ZINB", "C-NB", "LVM-ZINB", "LVM-NB", "CLR+PCA", "CLR+nMDS", "nMDS")
+  colnames(pro.errors) <- c("ZINB-GCLVM", "NB-GCLVM", "ZINB-GLLVM", "NB-GLLVM", "CLR+PCA", "CLR+nMDS", "nMDS")
 
   for (k in 1:rep_k) {
     print(k)
@@ -189,8 +189,8 @@ B <- nrow(sim50_copula)
 
 # Create a vector of method labels for each dataset
 methods <- c(
-  rep("C-ZINB", B), rep("C-NB", B), rep("LVM-ZINB", B),
-  rep("LVM-NB", B), rep("CLR + PCA", B), rep("nMDS", B), rep("CLR + nMDS", B)
+  rep("ZINB-GCLVM", B), rep("NB-GCLVM", B), rep("ZINB-GLLVM", B),
+  rep("NB-GLLVM", B), rep("CLR + PCA", B), rep("nMDS", B), rep("CLR + nMDS", B)
 )
 
 # Add the 'method' column to the combined data frame, repeated for each dimension
@@ -204,7 +204,7 @@ simres$dimension <- factor(simres$dimension, levels = c("m=50", "m=100", "m=200"
 
 # Reorder the levels of the 'method' factor for consistent legend and plot ordering
 simres$method <- factor(simres$method, levels = c(
-  "C-NB", "C-ZINB", "LVM-NB", "LVM-ZINB",
+  "NB-GCLVM", "ZINB-GCLVM", "NB-GLLVM", "ZINB-GLLVM",
   "CLR + PCA", "CLR + nMDS", "nMDS"
 ))
 
