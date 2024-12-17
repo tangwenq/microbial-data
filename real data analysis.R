@@ -1,5 +1,5 @@
 # Load necessary R packages
-source("clvm.R")
+source("GCLVM.R")
 library(devtools) # Load devtools for package installation
 devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
 library(gllvm) # Load the gllvm package
