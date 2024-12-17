@@ -66,7 +66,7 @@ for (i in 1:4) {
 
   # 3. Overall Correlation (whole data): cor
   overall_corr <- cor(c(pred_y), c(y)) # Calculate correlation across all data points
-  GOF_gllvmZINB[i, 3] <- mean_cor(pred_y, y) # Store the mean correlation value
+  GOF_gllvmZINB[i, 3] <- overall_corr 
 }
 
 # Print results for GLLVM with ZINB distribution
@@ -95,7 +95,7 @@ for (i in 1:4) {
 
   # 3. Overall Correlation (whole data): cor
   overall_corr <- cor(c(pred_y), c(y))
-  GOF_gllvmNB[i, 3] <- mean_cor(pred_y, y)
+  GOF_gllvmNB[i, 3] <- overall_corr
 }
 
 # Print results for GLLVM with NB distribution
@@ -129,7 +129,7 @@ for (i in 1:4) {
 
   # 3. Overall Correlation (whole data): cor
   overall_corr <- cor(c(pred_y), c(y))
-  GOF_cZINB[i, 3] <- mean_cor(pred_y, y)
+  GOF_cZINB[i, 3] <- overall_corr
 }
 
 # Print results for Copula with ZINB distribution
@@ -163,7 +163,7 @@ for (i in 1:4) {
 
   # 3. Overall Correlation (whole data): cor
   overall_corr <- cor(c(pred_y), c(y))
-  GOF_cNB[i, 3] <- mean_cor(pred_y, y)
+  GOF_cNB[i, 3] <- overall_corr
 }
 
 # Print results for Copula with NB distribution
