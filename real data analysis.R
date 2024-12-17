@@ -1,5 +1,5 @@
 # Load necessary R packages
-source("GCLVM.R")
+source("clvm.R")
 library(devtools) # Load devtools for package installation
 devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
 library(gllvm) # Load the gllvm package
@@ -34,130 +34,116 @@ save(unlvm_NB, file = "unlvmNB_model.RData") # Save unconstrained model
 
 # Visualize residuals (reproduces Figure 8)
 
+# the following plot will show the the upper plot in Figure 6, the D-S of concurrent constrained GLLVM_NB model with full data set
 
-# Plot D-S residuals against linear predictors, shown in left of Figure 8
-pdf(file = "residuals against linear predictors.pdf", width = 9, height = 9, useDingbats = FALSE)
+# Save D-S residuals against linear predictors, shown in upper left of Figure 8
+pdf(file = "residuals against linear predictors.pdf", width = 6, height = 6, useDingbats = FALSE)
+par(mar = c(5, 5, 0, 0) + 0.1) # Set plot margins
+plot(lvm_NB, which = 1 , caption =" ",var.colors = 1)
+dev.off()
+
+# Save Q-Q plot of residuals, shown in upper right of Figure 8
+pdf(file = "qqnorm for residuals.pdf", width = 6, height = 6, useDingbats = FALSE)
+plot(lvm_NB, which = 2 , caption =" ",var.colors = 1)
+dev.off()
+
+# the following plot will show the the bottom plot in Figure 6, the D-S of unconstrained GLLVM_NB model with full data set
+# Plot D-S residuals against linear predictors, shown in bottom left of Figure 8
+pdf(file = "un_residuals against linear predictors.pdf", width = 9, height = 9, useDingbats = FALSE)
 # Set plot margins
 par(mar = c(6, 6, 0, 0) + 0.1)
 
 # Create the plot
-plot(lvm_NB,
-  which = 1,
-  caption = " ", # Remove the default caption
-  var.colors = 1, # Set color for variables
-  cex.lab = 2.5, # Increase axis label text size
-  cex.axis = 1.5, # Increase axis tick label text size
-  cex.main = 2.5, # Increase main title text size
-  cex = 1
-) # Adjust the size of points or lines in the plot
+plot(unlvm_NB, 
+     which = 1, 
+     caption = " ",       # Remove the default caption
+     var.colors = 1,      # Set color for variables
+     cex.lab = 2.5,       # Increase axis label text size
+     cex.axis = 1.5,      # Increase axis tick label text size
+     cex.main = 2.5,      # Increase main title text size
+     cex = 1)             # Adjust the size of points or lines in the plot
 
 dev.off()
 
 
-# Save Q-Q plot of residuals
-pdf(file = "qqnorm_for residuals.pdf", width = 9, height = 9, useDingbats = FALSE)
+# Save Q-Q plot of residuals, shown in bottom right of Figure 8
+pdf(file = "un_qqnorm_for residuals.pdf", width = 9, height = 9, useDingbats = FALSE)
 # Set plot margins
 par(mar = c(6, 6, 0, 0) + 0.1)
 
 # Create the plot
-plot(lvm_NB,
-  which = 2,
-  caption = " ", # Remove the default caption
-  var.colors = 1, # Set color for variables
-  cex.lab = 2.5, # Increase axis label text size
-  cex.axis = 1.5, # Increase axis tick label text size
-  cex.main = 2.5, # Increase main title text size
-  cex = 1
-) # Adjust the size of points or lines in the plot
+plot(unlvm_NB, 
+     which = 2, 
+     caption = " ",       # Remove the default caption
+     var.colors = 1,      # Set color for variables
+     cex.lab = 2.5,       # Increase axis label text size
+     cex.axis = 1.5,      # Increase axis tick label text size
+     cex.main = 2.5,      # Increase main title text size
+     cex = 1)             # Adjust the size of points or lines in the plot
 
 dev.off()
+
 
 # Ordination plots for constrained and unconstrained models (reproduces Figure 7)
 # Save ordination plot for the unconstrained model
 pdf(file = "unconstrained_ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4.5, 4.5, 0, 0) + 0.1) # Set plot margins
+par(mar = c(4, 4, 0, 0) + 0.1) # Set plot margins
+
 # Draw ordination plot
 ordiplot(unlvm_NB,
   which.lvs = 1:2,
-  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
+  s.colors = as.numeric(factor(microbialdata$X$Region)) + 1,
   rotate = TRUE,
   symbols = TRUE,
-  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
-  main = "",
-  ann = FALSE
-) # Set symbols based on region
+  pch = as.numeric(factor(microbialdata$X$Region)) + 15, # Use solid shapes
+  ylim = c(-2, 4.9)
+) # Adjust ylim to prevent legend overlap
 
-title(xlab = "ordination score 1", ylab = "ordination score 2", cex.lab = 1.3)
-
-
-# Extract unique regions and symbols
+# Extract unique regions and their corresponding symbols and colors
 regions <- unique(microbialdata$X$Region) # Unique region names
-pch_values <- as.numeric(factor(regions)) + 15 # Define symbols manually: circle (15), triangle (16), plus (17)
-colors <- c("black", "blue", "grey")[as.numeric(factor(regions))] # Set specific colors for each region
+pch_values <- as.numeric(factor(regions)) + 15 # Solid symbols: circle(16), triangle(17), diamond(18)
+colors <- as.numeric(factor(regions)) + 1 # Assign colors to regions
 
-# Define full name of region as new region names
-new_region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
-# Add a legend with specified colors and symbols
-legend("topleft", # Legend position
-  legend = new_region_names, # Legend labels
-  pch = pch_values, # Corresponding symbols
-  col = colors, # Corresponding colors (black, blue, grey)
-  ncol = 3,
-  cex = 1.2
-) # Arrange legend in 3 columns
+# Add legend
+legend("topleft", # Position of legend
+  legend = regions, # Labels for regions
+  pch = pch_values, # Symbols for regions
+  col = colors
+) # Colors for regions
+
 dev.off()
 
 # Save ordination plot for the constrained model
 pdf(file = "ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4.5, 4.5, 0, 0) + 0.1) # Set plot margins
+par(mar = c(4, 4, 4, 0) + 0.1) # Set plot margins
 
 # Draw ordination plot
 ordiplot(lvm_NB,
   which.lvs = 1:2,
-  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
+  s.colors = as.numeric(factor(microbialdata$X$Region)) + 1,
   rotate = TRUE,
   symbols = TRUE,
-  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
-  main = "",
-  ann = FALSE
-) # Set symbols based on region
+  pch = as.numeric(factor(microbialdata$X$Region)) + 15
+) # Use solid shapes
 
-title(xlab = "ordination score 1", ylab = "ordination score 1", cex.lab = 1.3)
+# Add legend
+legend("topleft", # Position of legend
+  legend = regions, # Labels for regions
+  pch = pch_values, # Symbols for regions
+  col = colors
+) # Colors for regions
 
-
-# Extract unique regions and symbols
-regions <- unique(microbialdata$X$Region) # Unique region names
-pch_values <- as.numeric(factor(regions)) + 15 # Define symbols manually: circle (15), triangle (16), plus (17)
-colors <- c("black", "blue", "grey")[as.numeric(factor(regions))] # Set specific colors for each region
-
-
-# Add a legend with specified colors and symbols
-legend("topleft", # Legend position
-  legend = new_region_names, # Legend labels with full name of sample site
-  pch = pch_values, # Corresponding symbols
-  col = colors, # Corresponding colors (black, blue, grey)
-  ncol = 3, # Arrange legend in 3 columns
-  cex = 1.3
-)
 dev.off()
 
 # Compute AIC and BIC for other models (Table 2)
-# Fit gllvm model with zero-inflated negative binomial (ZINB)
+# Fit concurrent gllvm model with zero-inflated negative binomial (ZINB)
 lvmZINB_model <- gllvm(
   y = data, X = X, family = "ZINB", sd.errors = TRUE,
   row.eff = "fixed", num.lv.c = 2, seed = 123
 )
 save(lvmZINB_model, file = "lvmZINB_model.RData") # Save ZINB model
 
-# Fit copula models
-cNB_model <- fit_copula(data,
-  X = X, reff = "fixed", gllvm.fam = "negative.binomial",
-  sd.errors = TRUE, seed = 123, lv.n = 0
-) # Copula NB model
-save(cNB_model, file = "cNB_model.RData") # Save copula NB model
+# Fit unconstrained gllvm model with zero-inflated negative binomial (ZINB)
 
-cZINB_model <- fit_copula(data,
-  X = X, reff = "fixed", gllvm.fam = "ZINB",
-  sd.errors = TRUE, seed = 123, lv.n = 0
-) # Copula ZINB model
-save(cZINB_model, file = "cZINB_model.RData") # Save copula ZINB model
+unlvmZINB_model<- gllvm(y = data , family = "ZINB", sd.errors = TRUE, row.eff = "fixed",seed = 123)
+save(lvmZINB_model, file = "unlvmZINB_model.RData") # Save ZINB model
