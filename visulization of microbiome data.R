@@ -47,7 +47,7 @@ plot(means, variances,
   ylab = "Variance", # Y-axis label
   pch = 16,
   cex = 0.7, # Point size
-  col = "black, 
+  col = "black", 
   xlim = c(0, 30), # Limit for X-axis
   ylim = c(0, 1000), # Limit for Y-axis
   cex.lab = 1.5, # Label font size
@@ -79,6 +79,7 @@ long_data <- melt(data, varnames = c("Site", "Species"), value.name = "Richness"
 pdf(file = "sparsity.pdf", width = 8, height = 7, useDingbats = FALSE)
 par(mar = c(0, 0, 4, 4) + 0.1)
 
+
 # Generate the heatmap
 ggplot(long_data, aes(x = Species, y = Site, fill = Richness)) +
   geom_tile() +
@@ -95,15 +96,25 @@ ggplot(long_data, aes(x = Species, y = Site, fill = Richness)) +
     fill = "Count" # Axis and legend labels
   ) +
   theme(
-    axis.text.x = element_blank(), # Remove x-axis labels
+    axis.text.x = element_text(size = 14, face = "bold", angle = 90, hjust = 1), # Bold x-axis text
     axis.text.y = element_blank(), # Remove y-axis labels
     axis.ticks = element_blank(), # Remove axis ticks
     axis.title.x = element_text(size = 18),
     axis.title.y = element_text(size = 18),
     legend.title = element_text(size = 15),
     legend.text = element_text(size = 9),
-    legend.position = "bottom", # Move legend to the bottom
-    legend.direction = "horizontal" # Align legend horizontally
+    legend.position = "bottom", 
+    legend.direction = "horizontal" 
+  ) +
+  scale_x_discrete(
+    breaks = c(50, 100, 200, 400), # Specify discrete breaks if Species are numbered
+    labels = c("50", "100", "200", "400") # Custom labels
+  ) +
+  geom_vline(
+    xintercept = c(50, 100, 200, 400), 
+    color = "black", 
+    linetype = "solid", # Use solid lines for emphasis m = 50, 100, 200, 400
+    size = 1 
   ) +
   guides(
     fill = guide_colorbar(
@@ -115,3 +126,4 @@ ggplot(long_data, aes(x = Species, y = Site, fill = Richness)) +
 
 # Close the PDF device to save the plot
 dev.off()
+
