@@ -1,4 +1,4 @@
-# compare the performance of different modeling techniques (GLLVM vs Copula)
+# compare the performance of different modeling techniques (GLLVM vs Copula), shown in Table 1
 # Load required libraries
 source("GCLVM")
 library(gllvm) # Generalized Linear Latent Variable Models
