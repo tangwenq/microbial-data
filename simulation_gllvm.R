@@ -41,7 +41,7 @@ sim_gllvm <- function(gllvm_m, rep_k) {
     sim_y <- simulate.gllvm(true_mod, conditional = TRUE)
 
 
-    # fit the 6 methods with simulated y and calculate the Procrustes distance
+    # fit the 7 methods with simulated y and calculate the Procrustes distance
 
     # Distance-based methods: nMDS
 
