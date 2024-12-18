@@ -1,6 +1,6 @@
 # Define main function for model-based ordination using copulas with Zero-Inflated Negative Binomial(ZINB) models via gllvm
 
-fit_copula <- function(data, X, gllvm.fam = "ZINB", reff = FALSE, lv.n = 0, sd.errors = FALSE, seed = NULL)
+fit_copula <- function(data, gllvm.fam = "ZINB", reff = FALSE, lv.n = 0, sd.errors = FALSE, seed = NULL)
 # Set Random Seed to ensures reproducibility.
 {
   if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
@@ -16,7 +16,7 @@ fit_copula <- function(data, X, gllvm.fam = "ZINB", reff = FALSE, lv.n = 0, sd.e
   }
 
   # Use ZINB distribution in "gllvm" to fit the marginal model.
-  stacked_models <- gllvm(y = data, X=X ,family = gllvm.fam, num.lv = lv.n, row.eff = reff, sd.errors = FALSE)
+  stacked_models <- gllvm(y = data ,family = gllvm.fam, num.lv = lv.n, row.eff = reff, sd.errors = FALSE)
 
   # Simulate Dunn-Smyth residuals
   res_list <- simulate_res_S(obj = stacked_models, n.res = 500)
