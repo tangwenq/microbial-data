@@ -120,7 +120,7 @@ dev.off()
 # unconstrained NB-GLLVM model
 
 pdf(file = "unconstrained_ord.pdf", width = 6, height = 6, useDingbats = FALSE)
-par(mar = c(4.5, 4.5, 0, 0) + 0.1) # Set plot margins
+par(mar = c(4.5, 4.5, 0, 0) + 0.1) 
 # Draw ordination plot
 ordiplot(ungllvm_NB,
   which.lvs = 1:2,
@@ -155,7 +155,7 @@ dev.off()
 # constrained NB-GLLVM
 pdf(file = "ord.pdf", width = 6, height = 6, useDingbats = FALSE)
 
-par(mar = c(4.5, 4.5, 0, 0) + 0.1) # Set plot margins
+par(mar = c(4.5, 4.5, 0, 0) + 0.1) 
 
 
 ordiplot(gllvm_NB,
@@ -183,16 +183,15 @@ legend("topleft", # Legend position
 dev.off()
 
 
-
 # Compute AIC and BIC for ZINB-GLLVM models
 # Fit concurrent gllvm model with zero-inflated negative binomial
-lvmZINB_model <- gllvm(
+gllvm_ZINB <- gllvm(
   y = data, X = X, family = "ZINB", sd.errors = TRUE,
   row.eff = "fixed", num.lv.c = 2, seed = 123
 )
-save(lvmZINB_model, file = "lvmZINB_model.RData") # Save ZINB model
+save(gllvm_ZINB, file = "gllvm_ZINB.RData") # Save ZINB model
 
 # Fit unconstrained gllvm model with zero-inflated negative binomial (ZINB)
 
-unlvmZINB_model <- gllvm(y = data, family = "ZINB", sd.errors = TRUE, row.eff = "fixed", seed = 123)
-save(unlvmZINB_model, file = "unlvmZINB_model.RData") # Save ZINB model
+ungllvm_ZINB <- gllvm(y = data, family = "ZINB", sd.errors = TRUE, row.eff = "fixed", seed = 123)
+save(ungllvm_ZINB, file = "ungllvm_ZINB.RData") # Save ZINB model
