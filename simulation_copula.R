@@ -42,7 +42,7 @@ sim_copula <- function(copula_m, rep_k) {
     sim_y <- simulate_copula(true_mod)
 
 
-    # fit the 6 methods with simulated y and calculate the Procrustes distance
+    # fit the 7 methods with simulated y and calculate the Procrustes distance
 
     # Distance-based methods: nMDS
 
