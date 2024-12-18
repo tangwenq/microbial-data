@@ -1,7 +1,10 @@
+# The following code will reproduce heatmap and mean-variance in Figure 1
+
 # Load required libraries
+
 library(ggplot2) # For data visualization
 library(devtools) # For installing packages from GitHub
-devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package
+# devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package
 library(gllvm) # Load gllvm package
 library(reshape2) # For data reshaping
 library(scales)
@@ -15,6 +18,7 @@ ind <- data.s[order(data.s[, 2], decreasing = FALSE), 1] # Sort columns by spars
 data <- data[, ind] # Reorder columns accordingly
 
 # Draw mean-variance plot, (shown in right picture of Figure 1)
+
 # Compute mean and variance for each column
 means <- apply(data, 2, mean) # Column-wise means
 variances <- apply(data, 2, var) # Column-wise variances
@@ -47,7 +51,7 @@ plot(means, variances,
   ylab = "Variance", # Y-axis label
   pch = 16,
   cex = 0.7, # Point size
-  col = "black", 
+  col = "black",
   xlim = c(0, 30), # Limit for X-axis
   ylim = c(0, 1000), # Limit for Y-axis
   cex.lab = 1.5, # Label font size
@@ -103,18 +107,18 @@ ggplot(long_data, aes(x = Species, y = Site, fill = Richness)) +
     axis.title.y = element_text(size = 18),
     legend.title = element_text(size = 15),
     legend.text = element_text(size = 9),
-    legend.position = "bottom", 
-    legend.direction = "horizontal" 
+    legend.position = "bottom",
+    legend.direction = "horizontal"
   ) +
   scale_x_discrete(
     breaks = c(50, 100, 200, 400), # Specify discrete breaks if Species are numbered
     labels = c("50", "100", "200", "400") # Custom labels
   ) +
   geom_vline(
-    xintercept = c(50, 100, 200, 400), 
-    color = "black", 
+    xintercept = c(50, 100, 200, 400),
+    color = "black",
     linetype = "solid", # Use solid lines for emphasis m = 50, 100, 200, 400
-    size = 1 
+    size = 1
   ) +
   guides(
     fill = guide_colorbar(
@@ -126,4 +130,3 @@ ggplot(long_data, aes(x = Species, y = Site, fill = Richness)) +
 
 # Close the PDF device to save the plot
 dev.off()
-
