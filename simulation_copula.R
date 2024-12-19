@@ -11,7 +11,7 @@ library(robCompositions)
 library(gllvm)
 
 
-# fit the ZINB_copula model with subset of data to obtain true model and true ordinations.
+# fit the ZINB_GCLVM model with subset of data to obtain true model and true ordinations.
 fit_ZINBcopula <- function(data, m_species) {
   # Select the first m microbiome data
   y <- data[, 1:m_species]
@@ -157,13 +157,13 @@ write.table(sim100_copula, file = "sim100_copula.txt")
 # c) species/col = 200
 copula_200 <- fit_ZINBcopula(data, m_species = 200)
 
-sim200_copula <- sim_copula(copula_200, rep_k = 2)
+sim200_copula <- sim_copula(copula_200, rep_k = 50)
 
 write.table(sim200_copula, file = "sim200_copula.txt")
 
 # d) species/col =400
 copula_400 <- fit_ZINBcopula(data, m_species = 400)
-sim400_copula <- sim_copula(copula_400, rep_k = 2)
+sim400_copula <- sim_copula(copula_400, rep_k = 50)
 
 
 write.table(sim400_copula, file = "sim400_copula.txt")
