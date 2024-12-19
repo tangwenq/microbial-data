@@ -28,7 +28,7 @@ LGPL >= 2.1
 
 **References**
 
-Hui, F. K. C., Taskinen, S., Pledger, S., Foster, S. D., and Warton, D. I. (2014). Model-based approaches to unconstrained ordination. Methods in Ecology and Evolution, 6, 399–411.
+Hui, F. K. C., Taskinen, S., Pledger, S., Foster, S. D., and Warton, D. I. (2015). Model-based approaches to unconstrained ordination. Methods in Ecology and Evolution, 6, 399–411.
 
 Niku, J., Hui, F. K. C., Taskinen, S., and Warton, D. I. (2019). `gllvm` - Fast analysis of multivariate abundance data with generalized linear latent variable models in R. Methods in Ecology and Evolution, 10, 2173–218. 
 
