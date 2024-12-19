@@ -20,7 +20,7 @@ apply(data == 0, 2, sum) # Show zeros per column
 X <- scale(microbialdata$Xenv[, c("SOM", "pH", "Phosp")])
 
 
-# Fit constrained and unconstrained generalized linear latent variable models with negative binomial distribution(NB-GLLVM) with full data
+# Fit concurrent and unconstrained generalized linear latent variable models with negative binomial distribution(NB-GLLVM) with full data
 
 # Constrained concurrent model
 gllvm_NB <- gllvm(
@@ -39,7 +39,7 @@ save(ungllvm_NB, file = "ungllvmNB_model.RData") # Save unconstrained model
 # Visualize residuals for two NB-GLLVM model(reproduces Figure 6)
 
 
-# the D-S of constrained NB-GLLVM model with full data set, shown in bottom row in Figure 6
+# the D-S of concurrent NB-GLLVM model with full data set, shown in bottom row in Figure 6
 
 # D-S residuals against linear predictors
 pdf(file = "residuals against linear predictors.pdf", width = 9, height = 9, useDingbats = FALSE)
@@ -115,7 +115,7 @@ plot(ungllvm_NB,
 dev.off()
 
 
-# Ordination plots for constrained and unconstrained models (reproduces Figure 5)
+# Ordination plots for concurrent and unconstrained models (reproduces Figure 5)
 
 # unconstrained NB-GLLVM model
 
@@ -152,7 +152,7 @@ legend("topleft", # Legend position
 ) # Arrange legend in 3 columns
 dev.off()
 
-# constrained NB-GLLVM
+# concurrent NB-GLLVM
 pdf(file = "ord.pdf", width = 6, height = 6, useDingbats = FALSE)
 
 par(mar = c(4.5, 4.5, 0, 0) + 0.1) 
