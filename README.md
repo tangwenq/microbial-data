@@ -11,8 +11,8 @@ Source of copula code
 
 The main files are:
 
-- `GCLVM.R`: main functions in the file are `GCLVM` which performs model-based ordination along the lines of Popovic at al. (2022) and `simulate.copula` which simulates responses from a copula model fitted with `GCLVM`. The functions are modified versions of corresponding functions taken from https://github.com/gordy2x/ecoCopula and from the appendix of Popovic at al. (2022) available at https://doi.org/10.5281/zenodo.5525716.
-- `simulation_copula.R`
+- `GCLVM.R`: main functions in the file are `fit_copula` which performs model-based ordination along the lines of Popovic at al. (2022) and `simulate.copula` which simulates responses from a copula model fitted with `GCLVM`. The functions are modified versions of corresponding functions taken from https://github.com/gordy2x/ecoCopula and from the appendix of Popovic at al. (2022) available at https://doi.org/10.5281/zenodo.5525716.
+- `simulation_copula.R`: main 
 - `simulation_gllvm.R`
 
 **Authors**
@@ -29,4 +29,5 @@ Niku, J., Hui, F. K. C., Taskinen, S., and Warton, D. I. (2019). `gllvm` - Fast 
 
 Popovic, G. C., Hui, F. K. C., and Warton, D. I. (2022). Fast model-based ordination with copulas. Methods in Ecology and Evolution, 13, 194–202.
 
+Hui, F. K. C., Taskinen, S., Pledger, S., Foster, S. D., and Warton, D. I. (2014). Model-based approaches to unconstrained ordination. Methods in Ecology and Evolution, 6, 399–411.
 
