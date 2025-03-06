@@ -211,8 +211,8 @@ region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
 # draw ordination plot for pca
 plot(pca_ords[, 1], pca_ords[, 2], type = "n", 
      xlab = "PC1", ylab = "PC2", main = "PCA of CLR-transformed Data")
-points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(region_factor)], 
-       pch = pch_values[as.numeric(region_factor)], cex = 1.2) 
+points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(factor(regions))], 
+       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
 
 
 legend("topleft",                      
