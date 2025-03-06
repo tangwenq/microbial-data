@@ -12,6 +12,14 @@ editor_options:
     wrap: 72
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, size="footnotesize", fig.width=7, fig.height=7, 
+fig.align="center",dev="png", code.frame = TRUE, warning = FALSE, fig.pos='H', message=FALSE)
+```
+
+
+
+
 This document introduces three distinct ordination methods applicable to
 high-dimensional compositional count data. Specifically, we explore
 classical ordination methods, Generalized Linear Latent Variable Models
@@ -34,10 +42,11 @@ We order the columns according to sparseness and use a heatmap to visualize the 
 
 
 
-```{r data, echo=TRUE,message=FALSE}
+```{r data, echo=TRUE}
 library(robCompositions)
 library(vegan)
 library(devtools) # Load devtools for package installation
+
 devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
 library(gllvm) # Load the gllvm package
 source_url("https://raw.githubusercontent.com/tangwenq/microbial-data/main/GCLVM.R")
@@ -314,7 +323,7 @@ For model-based methods, we can use the following code in `gllvm` to generate re
 
 
 # the D-S of concurrent NB-GLLVM model, shown in bottom row in Figure 8
-
+par(mar = c(6, 6, 0, 0) + 0.1) # Set plot margins
 plot(gllvm_NB,
   which = 1, #when which = 1, it produces a residuals plot
   caption = " ",
@@ -324,7 +333,7 @@ plot(gllvm_NB,
   cex.main = 2.5,
   cex = 1
 )
-
+par(mar = c(6, 6, 0, 0) + 0.1) # Set plot margins
 # Q-Q plot of residuals
 plot(gllvm_NB,
   which = 2, #when which = 2, it generates a QQ norm plot
@@ -356,6 +365,7 @@ legend("topleft", # Legend position
   ncol = 3,
   cex = 1
 ) # Arrange legend in 3 columns
+
 
 ```
 
