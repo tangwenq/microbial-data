@@ -411,7 +411,7 @@ to estimate the covariance parameters in the Copula model.
 
   
   # Copula with NB distribtuion
-    c_NB <- it_copula(y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
+    c_NB <- fit_copula(y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
     c_NB_ords <- scale(c_NB$scores)# extract ordinations
 c_NB_ords
 ```
