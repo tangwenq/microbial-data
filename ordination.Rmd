@@ -1,6 +1,5 @@
 ---
-title: "Appliying model-based unconstrained ordination methods high-dimensional compositional
-  count data"
+title: "Comparing model-based unconstrained ordination methods in the analysis of high-dimensional compositional count data"
 author: "wenqi tang"
 date: "2025-03-03"
 
@@ -20,9 +19,7 @@ fig.align="center",dev="png", code.frame = TRUE, warning = FALSE, fig.pos='H', m
 
 
 
-This document introduces three distinct ordination methods applicable to
-high-dimensional compositional count data. Specifically, we explore
-classical ordination methods, Generalized Linear Latent Variable Models
+This document reproduces the main content of the introduction and simulation section of the paper with the same name by Tang, W., Korhonen, P., Niku, J., Nordhausen, K. and Taskinen, S. It includes microbiome data visualization and example about how to handle compositional data and apply ordination methods in R within the simulation section. We primarily introduce the three distinct ordination methods mentioned in the paper, which are applicable to high-dimensional compositional count data. Specifically, we explore classical ordination methods, Generalized Linear Latent Variable Models
 (GLLVMs)-based ordination methods, and copula-based methods, applying
 them to microbial data as detailed in @Kumar2017. The dataset used in
 this analysis consists of a 56 × 985 matrix, representing 985 bacterial
@@ -47,7 +44,7 @@ library(robCompositions)
 library(vegan)
 library(devtools) # Load devtools for package installation
 
-devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
+#devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
 library(gllvm) # Load the gllvm package
 source_url("https://raw.githubusercontent.com/tangwenq/microbial-data/main/GCLVM.R")
 library(reshape2) # For data reshaping
@@ -183,11 +180,9 @@ handling zero values.
 
 ## Example 
 In the following analysis, we demonstrate the application of classical ordination methods to
-compositional data using the first 200 colums of microbiome data as an
-illustrative example. 
-
+compositional data.
 ```{r, classical, echo=TRUE}
-y <- data[, 1:200]
+y <- data
 # Distance-based methods: nMDS
 
     fit_mds <- metaMDS(y, distance = "bray", trace = FALSE)
@@ -308,11 +303,23 @@ scale(gllvm_NB$lvs) # extract ordinations
 
 ```
 
-From  `summary` function, we can obtain AIC and BIC shown in table 2 in thesis
+Through the `summary()` function, we can observe the AIC and BIC values of the model, which can also be found in **Table 2** of the paper. 
+
 
 ```{r gllvm_analysis, echo=TRUE}
 summary(gllvm_NB)
 ```
+Additionally,
+- **pH(CLV1)**: Estimate = -0.135067, p < 0.001 (significant negative effect)  
+  This indicates that pH has a **negative influence** on the first latent variable (CLV1), and the p-value (< 0.001) suggests that this effect is **highly significant**.
+
+- **pH(CLV2)**: Estimate = 0.034117, p < 0.001 (significant positive effect)  
+  This indicates that pH has a **positive influence** on the second latent variable (CLV2), and the p-value (< 0.001) suggests that this effect is **highly significant**.
+
+From these results, we can conclude that the **NB-GLLVM model successfully captures the effects of environmental variables (particularly pH) on microbial community structure**. This conclusion is also supported by the following ordination plot, where pH is represented by dark red arrows, indicating its strong influence.
+
+Furthermore, it is worth noting that some environmental variables (e.g., SOM) do not show significant effects on the latent variables.
+The row effects capture the **site-specific variability** among sampling sites. The p-values reflect whether the influence of each sampling site on the response variable is significant.
 
 
 For model-based methods, we can use the following code in `gllvm` to generate residuals plots and ordination plots for analysis, assessing the model's fitting performance.
@@ -417,15 +424,33 @@ to estimate the covariance parameters in the Copula model.
 
  # Copula with ZINB distribution
     c_ZINB <- fit_copula(y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
-    c_ZINB_ords <- scale(c_ZINB$scores)# extract ordinations
 
   
   # Copula with NB distribtuion
     c_NB <- fit_copula(y, gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
+    
     c_NB_ords <- scale(c_NB$scores)# extract ordinations
 c_NB_ords
 ```
+we can use following code to draw ordinatio plot and extract model to check AIC.
+```{r GCLVM_ana, echo=TRUE}
+obj = c_NB$obj #extract model
+obj
+# draw ordination plot for pca
+plot( c_NB_ords[, 1],  c_NB_ords[, 2], type = "n", 
+     xlab = "PC1", ylab = "PC2", main = "NB_GCLVM ordination plot ")
+points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(factor(regions))], 
+       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
 
+
+legend("topleft",                      
+       legend = region_names,       
+       pch = pch_values,               
+       col = colors,                    
+       ncol = 3,                        
+       cex = 1) 
+
+```
 ## References
 
 ---
