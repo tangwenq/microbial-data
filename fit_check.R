@@ -8,27 +8,9 @@ library(mvtnorm) # Multivariate normal and t-distributions
 
 # Check the goodness of fit with 3 measures
 # 1. MARNE: Mean Absolute Range Normalized Error.
-marne <- function(pred_y, y) {
-  # Calculate mean absolute error normalized by the range of observed values (species-wise)
-  err <- mean(rowMeans(t(abs(y - pred_y)) / apply((y), 2, max)))
-  return(err)
-}
-
 # 2. Species-wise Correlations: mCOR
-# Mean correlation between predicted (pred_y) and observed (y) values, calculated species-wise
-mean_cor <- function(pred_y, y) {
-  crr <- NULL
-  for (i in 1:ncol(y)) {
-    crr[i] <- cor(pred_y[, i], y[, i]) # Compute correlation for each species (column)
-  }
-  mCOR <- mean(crr) # Calculate the mean correlation across species
-  return(mCOR)
-}
-
 # 3. Overall Correlation (whole data): cor
 # Global correlation between pred_y and y across all data points.
-# This computes a single correlation value across the entire dataset
-
 # Load microbial data
 data("microbialdata")
 data <- microbialdata$Y
@@ -61,14 +43,14 @@ for (i in 1:4) {
   pred_y <- predict.gllvm(model, type = "response") # Predict values from the fitted model
 
   # 1. MARNE : Mean Absolute Range Normalized Error
-  GOF_gllvmZINB[i, 1] <- marne(pred_y, y)
-
+  GOF_gllvmZINB[i, 1] <-  goodnessOfFit(y = y, pred = pred_y,  measure = c("MARNE"), species = FALSE)$MARNE
+  
   # 2. Species-wise Correlations: mCOR
-  GOF_gllvmZINB[i, 2] <- mean_cor(pred_y, y)
+  GOF_gllvmZINB[i, 2] <- mean(goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = TRUE)$cor)
 
   # 3. Overall Correlation (whole data): cor
-  overall_corr <- cor(c(pred_y), c(y)) # Calculate correlation across all data points
-  GOF_gllvmZINB[i, 3] <- overall_corr 
+ 
+  GOF_gllvmZINB[i, 3] <- goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = FALSE)$cor
 }
 
 # Print results for GLLVM with ZINB distribution
@@ -90,14 +72,15 @@ for (i in 1:4) {
   pred_y <- predict.gllvm(model, type = "response") # Predict values from the fitted model
 
   # 1. MARNE : Mean Absolute Range Normalized Error
-  GOF_gllvmNB[i, 1] <- marne(pred_y, y)
+  GOF_gllvmNB[i, 1] <- goodnessOfFit(y = y, pred = pred_y,  measure = c("MARNE"), species = FALSE)$MARNE
 
   # 2. Species-wise Correlations: mCOR
-  GOF_gllvmNB[i, 2] <- mean_cor(pred_y, y)
+
+  GOF_gllvmNB[i, 2] <-mean(goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = TRUE)$cor)
 
   # 3. Overall Correlation (whole data): cor
-  overall_corr <- cor(c(pred_y), c(y))
-  GOF_gllvmNB[i, 3] <- overall_corr
+
+  GOF_gllvmNB[i, 3] <- goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = FALSE)$cor
 }
 
 # Print results for GLLVM with NB distribution
@@ -124,14 +107,14 @@ for (i in 1:4) {
   pred_y <- exp(eta + (true.ords %*% t(true.load))) # Exponentiate to get predictions
 
   # 1. MARNE : Mean Absolute Range Normalized Error
-  GOF_cZINB[i, 1] <- marne(pred_y, y)
+  GOF_cZINB[i, 1] <-  goodnessOfFit(y = y, pred = pred_y,  measure = c("MARNE"), species = FALSE)$MARNE
 
   # 2. Species-wise Correlations: mCOR
-  GOF_cZINB[i, 2] <- mean_cor(pred_y, y)
+  GOF_cZINB[i, 2] <- mean(goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = TRUE)$cor)
 
   # 3. Overall Correlation (whole data): cor
-  overall_corr <- cor(c(pred_y), c(y))
-  GOF_cZINB[i, 3] <- overall_corr
+  
+  GOF_cZINB[i, 3] <- goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = FALSE)$cor
 }
 
 # Print results for Copula with ZINB distribution
@@ -158,14 +141,14 @@ for (i in 1:4) {
   pred_y <- exp(eta + (true.ords %*% t(true.load))) # Exponentiate to get predictions
 
   # 1. MARNE : Mean Absolute Range Normalized Error
-  GOF_cNB[i, 1] <- marne(pred_y, y)
+  GOF_cNB[i, 1] <- goodnessOfFit(y = y, pred = pred_y,  measure = c("MARNE"), species = FALSE)$MARNE
 
   # 2. Species-wise Correlations: mCOR
-  GOF_cNB[i, 2] <- mean_cor(pred_y, y)
+  GOF_cNB[i, 2] <- mean(goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = TRUE)$cor)
 
   # 3. Overall Correlation (whole data): cor
-  overall_corr <- cor(c(pred_y), c(y))
-  GOF_cNB[i, 3] <- overall_corr
+  
+  GOF_cNB[i, 3] <- goodnessOfFit(y = y, pred = pred_y,  measure = c("cor"), species = FALSE)$cor
 }
 
 # Print results for Copula with NB distribution
