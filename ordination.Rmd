@@ -1,5 +1,5 @@
 ---
-title: "Comparing model-based unconstrained ordination methods in the analysis of high-dimensional compositional count data"
+title: "Workflow illustration to compare ordination methods in the analysis of high-dimensional compositional count data using a  microbiome data set"
 author: "wenqi tang"
 date: "2025-03-03"
 
@@ -17,8 +17,7 @@ fig.align="center",dev="png", code.frame = TRUE, warning = FALSE, fig.pos='H', m
 ```
 
 This document reproduces the main content of the introduction and
-simulation section of the paper with the same name by Tang, W.,
-Korhonen, P., Niku, J., Nordhausen, K. and Taskinen, S. It includes
+simulation section of the paper with the same name by Wenqi Tang, Pekka Korhonen, Jenni Niku,  Klaus Nordhausen and Sara Taskinen. It includes
 microbiome data visualization and example about how to handle
 compositional data and apply ordination methods in R within the
 simulation section. We primarily introduce the three distinct ordination
@@ -47,7 +46,6 @@ is employed to assess the overdispersed in the data.
 library(robCompositions)
 library(vegan)
 library(devtools) # Load devtools for package installation
-
 #devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
 library(gllvm) # Load the gllvm package
 source_url("https://raw.githubusercontent.com/tangwenq/microbial-data/main/GCLVM.R")
