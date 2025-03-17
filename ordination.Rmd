@@ -1,18 +1,15 @@
 ---
 title: "Workflow illustration to compare ordination methods in the analysis of high-dimensional compositional count data using a  microbiome data set"
 author: "wenqi tang"
-date: "2025-03-03"
-
-output:
-  html_document: default
-  pdf_document: default
+date: "2025-03-17"
+output: github_document
 editor_options:
   markdown:
     wrap: 72
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, size="footnotesize", fig.width=7, fig.height=7, 
+knitr::opts_chunk$set(echo = TRUE, size="footnotesize", fig.width=6, fig.height=5, 
 fig.align="center",dev="png", code.frame = TRUE, warning = FALSE, fig.pos='H', message=FALSE)
 ```
 
@@ -276,25 +273,27 @@ used to approximate the marginal log-likelihood function.
 
 ## Example
 
-```{r GLLVM, echo=TRUE}
+First, enable parallelization for `gllvm` to speed up computations:
+```{r parallel, results=FALSE, message=FALSE}
+TMB::openmp(n = parallel::detectCores()-1, autopar = TRUE)
+```
 
-
-
-
+To fit the model:
+```{r GLLVM, echo=TRUE, eval=TRUE, cache=FALSE}
 # Fit generalized linear latent variable models with NB and ZINB distribution with full data
 # Extract and scale environmental covariates
 X <- scale(microbialdata$Xenv[, c("SOM", "pH", "Phosp")])
 
-# Unconstrained model
-ungllvm_NB <- gllvm(
-  y = y, family = "negative.binomial", sd.errors = TRUE,
-  row.eff = "fixed", num.lv = 2, seed = 123
-)
+# Uncomment to fit unconstrained model
+#ungllvm_NB <- gllvm(
+#  y = y, family = "negative.binomial", sd.errors = FALSE,
+#  row.eff = "fixed", num.lv = 2, seed = 123
+#)
 
 
 # Constrained concurrent model
 gllvm_NB <- gllvm(
-  y = y, X=X,family = "negative.binomial", sd.errors = TRUE,
+  y = y, X=X,family = "negative.binomial", sd.errors = FALSE,
   row.eff = "fixed", num.lv.c = 2, seed = 123
 )
 
@@ -305,11 +304,12 @@ scale(gllvm_NB$lvs) # extract ordinations
 
 ```
 
-Through the `summary()` function, we can observe the AIC and BIC values
+Through the `summary()`, `AIC()` or `BIC()` functions, we can observe the AIC and BIC values
 of the model, which can also be found in **Table 2** of the paper.
 
 ```{r gllvm_analysis, echo=TRUE}
-summary(gllvm_NB)
+AIC(gllvm_NB)
+BIC(gllvm_NB)
 ```
 
 Additionally,
@@ -433,10 +433,10 @@ the covariance parameters in the Copula model.
 
 ## Example
 
-```{r GCLVM, echo=TRUE}
+```{r GCLVM, echo=TRUE, cache=FALSE}
 
- # Copula with ZINB distribution
-    c_ZINB <- fit_copula(y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
+ # Uncomment for copula with ZINB distribution
+    #c_ZINB <- fit_copula(y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
 
   
   # Copula with NB distribtuion
