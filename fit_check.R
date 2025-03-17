@@ -1,6 +1,8 @@
 # compare the performance of different modeling techniques (GLLVM vs Copula), shown in Table 1
 # Load required libraries
 source("GCLVM")
+library(devtools) # Load devtools for package installation
+devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
 library(gllvm) # Generalized Linear Latent Variable Models
 library(mvtnorm) # Multivariate normal and t-distributions
 
