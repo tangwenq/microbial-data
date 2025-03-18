@@ -1,0 +1,531 @@
+Workflow illustration for “Comparing model-based unconstrained
+ordination methods in the analysis of high-dimensional compositional
+count data”
+================
+Wenqi Tang
+2025-03-18
+
+This document reproduces the main content of the introduction and
+simulation section of the paper with the same name by Wenqi Tang, Pekka
+Korhonen, Jenni Niku, Klaus Nordhausen and Sara Taskinen. It includes
+microbiome data visualization and example about how to handle
+compositional data and apply ordination methods in R within the
+simulation section. We primarily introduce the three distinct ordination
+methods mentioned in the paper, which are applicable to high-dimensional
+compositional count data. Specifically, we explore classical ordination
+methods, those based on generalized linear latent variable models
+(GLLVMs), and copula-based methods, applying them to microbial data as
+detailed in Kumar et al. (2017). The dataset used in this analysis
+consists of a 56 × 985 matrix, representing 985 bacterial species
+sampled from 56 soil sites across three distinct climatic regions:
+Ny-Ålesund (high Arctic), Kilpisjärvi (low Arctic), and Mayrhofen
+(European Alps) (Kumar et al. 2017). Due to biological or technical
+factors, such datasets often contain a significant proportion of zero
+observations (e.g., 63% zeros in the microbiome data). Additionally,
+microbiome data exhibit a compositional nature, as highlighted in Gloor
+et al. (2016), meaning the data represent relative abundances rather
+than absolute counts.
+
+## Data preprocessing
+
+We order the columns according to sparseness and use a heatmap to
+visualize the sparsity of the data. Additionally, a mean-variance plot
+is employed to assess the overdispersed in the data.
+
+``` r
+library(robCompositions)
+library(vegan)
+library(devtools) # Load devtools for package installation
+#devtools::install_github("JenniNiku/gllvm") # Install the latest gllvm package from GitHub
+library(gllvm) # Load the gllvm package
+source_url("https://raw.githubusercontent.com/tangwenq/microbial-data/main/GCLVM.R")
+library(reshape2) # For data reshaping
+library(scales)
+
+# Base the simulations to arctic microbialdata from Nissinen et al.
+# Data included in gllvm package
+
+data("microbialdata")
+data <- microbialdata$Y
+# order columns according to sparseness
+data.s <- cbind(1:dim(data)[2], apply(data == 0, 2, sum))
+ind <- data.s[order(data.s[, 2], decreasing = FALSE), 1]
+data <- data[, ind]
+dim(data)
+```
+
+    ## [1]  56 985
+
+``` r
+# Draw mean-variance plot, (shown in right picture of Figure 1)
+
+# Compute mean and variance for each column
+means <- apply(data, 2, mean) # Column-wise means
+variances <- apply(data, 2, var) # Column-wise variances
+
+# Define a Negative Binomial (NB) variance function
+nb_model <- function(mean, theta) {
+  mean + mean^2 * theta # NB variance formula
+}
+
+# Fit the NB model to the data using nonlinear least squares
+fit <- nls(variances ~ nb_model(means, theta),
+  start = list(theta = 0.1)
+) # Use an initial guess for theta
+
+# Extract the optimal dispersion parameter (theta)
+theta_opt <- coef(fit)["theta"] # Extract the estimated theta value
+cat("Optimal dispersion parameter (theta):", theta_opt, "\n")
+```
+
+    ## Optimal dispersion parameter (theta): 1.114091
+
+``` r
+# Plot mean-variance relationship
+plot(means, variances,
+  xlab = "Mean", # X-axis label
+  ylab = "Variance", # Y-axis label
+  pch = 16,
+  cex = 0.7, # Point size
+  col = "black",
+  xlim = c(0, 30), # Limit for X-axis
+  ylim = c(0, 1000), # Limit for Y-axis
+  cex.lab = 1.5, # Label font size
+  cex.axis = 1.4, # Axis font size
+  cex.main = 1.6
+) # Title font size
+
+# Add a Poisson reference line (variance = mean)
+abline(a = 0, b = 1, col = "blue", lwd = 2) # Poisson variance line
+
+# Add the Negative Binomial relationship line
+theta <- theta_opt # Use the estimated dispersion parameter
+nb_variance <- means + means^2 * theta # Compute NB variance
+lines(sort(means), sort(nb_variance),
+  col = "blue", lwd = 2, lty = 2
+) # Add the NB variance line (dashed)
+```
+
+<img src="ordination_files/figure-gfm/data-1.png" style="display: block; margin: auto;" />
+
+``` r
+# Draw heatmap of data, (shown in left picture of Figure 1)
+
+# Convert data to long format for plotting
+long_data <- melt(data, varnames = c("Site", "Species"), value.name = "Richness")
+
+
+# Generate the heatmap
+ggplot(long_data, aes(x = Species, y = Site, fill = Richness)) +
+  geom_tile() +
+  scale_fill_gradientn(
+    colors = rev(hcl.colors(n = 8, palette = "Spectral")), # Reverse gradient colors
+    values = rescale(c(0, 2, 5, 10, 15, 50, 100, 200, 1024)), # Emphasize 0-15 range
+    oob = scales::squish, # Handle out-of-bounds values
+    limits = c(0, 1024) # Set gradient range
+  ) +
+  theme_minimal() + # Minimal theme
+  labs(
+    x = "Species",
+    y = "Sample",
+    fill = "Count" # Axis and legend labels
+  ) +
+  theme(
+    axis.text.x = element_text(size = 14, face = "bold", angle = 90, hjust = 1), # Bold x-axis text
+    axis.text.y = element_blank(), # Remove y-axis labels
+    axis.ticks = element_blank(), # Remove axis ticks
+    axis.title.x = element_text(size = 18),
+    axis.title.y = element_text(size = 18),
+    legend.title = element_text(size = 15),
+    legend.text = element_text(size = 9),
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  ) +
+  scale_x_discrete(
+    breaks = c(50, 100, 200, 400), # Specify discrete breaks if Species are numbered
+    labels = c("50", "100", "200", "400") # Custom labels
+  ) +
+  geom_vline(
+    xintercept = c(50, 100, 200, 400),
+    color = "black",
+    linetype = "solid", # Use solid lines for emphasis m = 50, 100, 200, 400
+    size = 1
+  ) +
+  guides(
+    fill = guide_colorbar(
+      barwidth = 32,
+      barheight = 2,
+      breaks = seq(0, 250, by = 50)
+    )
+  )
+```
+
+<img src="ordination_files/figure-gfm/data-2.png" style="display: block; margin: auto;" />
+
+## Classical ordination
+
+Classical methods for unconstrained ordination, such as **non-metric
+multidimensional scaling (nMDS)** and **principal component analysis
+(PCA)**, are widely used due to their computational efficiency and ease
+of implementation. Compositional data are subject to sum constraints,
+require **centered log-ratio (clr) transformation** in **R package
+`robCompositions`** to map compositional data from the Aitchison space
+to real space before applying these methods. For **nMDS**, the Euclidean
+distance can be used to evaluate the clr-transformed data by specifying
+`distance = "euclidean"`. Alternatively, for the original compositional
+data, dissimilarity measures such as the Bray-Curtis distance
+`distance = "bray"` can be applied using the **R package `vegan`**. As
+notable downsides, classical methods lack a probabilistic framework, and
+may have challenges in handling zero values.
+
+### Example
+
+In the following analysis, we demonstrate the application of classical
+ordination methods to compositional data.
+
+``` r
+y <- data
+# Distance-based methods: nMDS
+
+    fit_mds <- metaMDS(y, distance = "bray", trace = FALSE)
+    mds_ords <- scale(fit_mds$ points) # extract ordinations from nMDS
+    
+    # PCA and nMDS on CLR-transformed data
+    clr_y <- cenLR(y + 1) # CLR transformation of sim_y with added 1
+
+    fit_clrmds <- metaMDS(clr_y$x.clr, distance = "euclidean", autotransform = FALSE, noshare = FALSE, wascores = FALSE, trace = FALSE)
+    clrmds_ords <- scale(fit_clrmds$points)
+    
+    fit_pca <- prcomp(clr_y$x.clr, scale = TRUE) # PCA on the CLR-transformed data clr_y
+    pca_ords <- scale(fit_pca$x[, 1:2]) # extract ordinations from PCA
+```
+
+The microbiome data was collected from three regions: “Mayrhofen,”
+“Kilpisjarvi,” and “Ny-Ålesund.” To analyze the community structure of
+these data, we can visualize the ordinations extracted using classical
+methods by plotting ordination plots. The following code demonstrates
+how to perform ordination analysis on CLR-transformed data using PCA as
+an example and visualize the results.
+
+``` r
+# Extract unique regions and symbols
+regions <- unique(microbialdata$X$Region) # Unique region names
+pch_values <- as.numeric(factor(regions)) + 15 # Define symbols manually: circle (15), triangle (16), plus (17)
+colors <- c("black", "blue", "grey")[as.numeric(factor(regions))] # Set specific colors for each region
+
+region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
+
+# Draw the ordination plot for pca
+plot(pca_ords[, 1], pca_ords[, 2], type = "n", 
+     xlab = "PC1", ylab = "PC2", main = "PCA of CLR-transformed Data")
+points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(factor(regions))], 
+       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
+
+legend("topleft",                      
+       legend = region_names,       
+       pch = pch_values,               
+       col = colors,                    
+       ncol = 3,                        
+       cex = 1)                       
+```
+
+<img src="ordination_files/figure-gfm/classical_vis-1.png" style="display: block; margin: auto;" />
+
+## Ordination based on latent variable models (GLLVM)
+
+Generalized Linear Latent Variable Models (GLLVMs) provide a flexible
+framework for jointly modeling multivariate response data, such as
+microbial count data. GLLVMs extend Generalized Linear Models (GLMs) by
+incorporating correlations among response variables using a
+factor-analytic approach. This allows GLLVMs to be used for model-based
+ordination for any response type. Assume
+$\boldsymbol{u}_i = (u_{i1}, \dots, u_{id})^\top$ is a $d$-dimensional
+latent variable following a standard multivariate normal distribution
+$\boldsymbol{u}_i \sim N(\boldsymbol{0}, \boldsymbol{I}_d)$. In GLLVMs,
+it is assumed that, conditional on the latent variables
+$\boldsymbol{u}_i$, the response variables $y_{ij}$ are independently
+distributed according to some distribution
+$F(\mu_{ij}, \boldsymbol{\phi})$, where
+$\mu_{ij} = \mathbb{E}(y_{ij} | \boldsymbol{u}_i)$ is the conditional
+mean, and $\boldsymbol{\phi}$ includes possible response-specific
+parameters (e.g., dispersion or zero-inflation parameters). When GLLVMs
+are used for model-based ordination, $\mu_{ij}$ is linked to the linear
+predictor via:
+$$ g(\mu_{ij}) = \alpha_i + \beta_{0j} + \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i, $$
+where: - $g(\cdot)$ is a known link function (typically the log-link for
+count data). - $\beta_{0j}$ is a column-specific intercept to account
+for differences in column totals.
+-$\boldsymbol{\lambda}_j = (\lambda_{j1}, \dots, \lambda_{jd})^\top$ is
+a$d$ -dimensional vector of factor loadings. - $\alpha_i$ is a
+row-specific intercept to account for differences in row totals (usually
+assumed as a fixed effect with the identifiability constraint
+$\alpha_{i1} = 0$).
+
+To ensure model identifiability, the upper triangular part of the factor
+loading matrix
+$\boldsymbol{\Lambda} = [\boldsymbol{\lambda}_1 \cdots \boldsymbol{\lambda}_m]^\top$
+is set to zero, and its diagonal elements are set to positive values.
+The `gllvm` package implements the **zero-inflated negative
+binomial(ZINB)** (`family = "ZINB"`) and **negative binomial (NB)**
+(`family = "negative.binomial"`) GLLVMs to better handle datasets with a
+large number of zeros. These models are particularly suited for
+overdispersed count data, where excess zeros are common. For non-normal
+response data, estimation is typically based on pproximate marginal
+likelihood using variational approximations (VA) or Laplace’s
+approximation (LA).
+
+### Example
+
+First, enable parallelization for `gllvm` to speed up computations:
+
+``` r
+TMB::openmp(n = parallel::detectCores()-1, autopar = TRUE, DLL = "gllvm")
+```
+
+Then, to fit the model:
+
+``` r
+# Extract and scale environmental covariates
+X <- scale(microbialdata$Xenv[, c("SOM", "pH", "Phosp")])
+
+# Uncomment to fit unconstrained model
+#ungllvm_NB <- gllvm(
+#  y = y, family = "negative.binomial", sd.errors = FALSE,
+#  row.eff = "fixed", num.lv = 2, seed = 123
+#)
+
+# Concurrent ordination model
+gllvm_NB <- gllvm(
+  y = y, X=X,family = "negative.binomial", sd.errors = FALSE,
+  row.eff = "fixed", num.lv.c = 2, seed = 123
+)
+
+head(scale(gllvm_NB$lvs)) # extract ordination scores
+```
+
+    ##           CLV1       CLV2
+    ## AB2 -0.7953766  0.2402610
+    ## AB3 -1.0790459 -0.3266150
+    ## AB4 -2.1641445  0.2845856
+    ## AB5 -1.0298991 -1.2014887
+    ## AT2 -1.2004097  0.1686986
+    ## AT3 -1.4678935 -0.8415426
+
+Through the `summary()`, `AIC()` or `BIC()` functions, we can observe
+the AIC and BIC values of the model, which can also be found in **Table
+2** of the paper.
+
+``` r
+AIC(gllvm_NB)
+```
+
+    ## [1] 126692.1
+
+``` r
+BIC(gllvm_NB)
+```
+
+    ## [1] 162355.2
+
+Additionally,
+
+- The estimate pH(CLV1) = -0.135067, p \< 0.001, indicates that pH has a
+  **negative influence** on the first latent variable (CLV1), and the
+  p-value (\< 0.001) suggests that this effect is **statistically
+  significant**.
+- The estimate pH(CLV2) = 0.034117, p \< 0.001, indicates that pH has a
+  **positive influence** on the second latent variable (CLV2), and the
+  p-value (\< 0.001) suggests that this effect is **statistically
+  significant**.
+
+From these results, we can conclude that the **NB-GLLVM model
+successfully captures the effects of environmental variables
+(particularly pH) on microbial community structure**. This conclusion is
+also supported by the following ordination plot, where pH is represented
+by dark red arrows, indicating its strong influence.
+
+Furthermore, it is worth noting that some environmental variables (e.g.,
+SOM) do not show significant effects on the latent variables. The row
+effects capture the **site-specific variability** among sampling sites.
+The p-values reflect whether the influence of each sampling site on the
+response variable is significant.
+
+For model-based methods, we can use the following code in `gllvm` to
+generate residuals plots and ordination plots for analysis, assessing
+the model’s fitting performance.
+
+``` r
+# Visualize residuals for  NB-GLLVM model(reproduces Figure 8)
+# the D-S of concurrent NB-GLLVM model, shown in bottom row in Figure 8
+par(mar = c(6, 6, 0, 0) + 0.1) # Set plot margins
+plot(gllvm_NB,
+  which = 1, #when which = 1, it produces a residuals plot
+  caption = " ",
+  var.colors = 1,
+  cex.lab = 2.5,
+  cex.axis = 1.5,
+  cex.main = 2.5,
+  cex = 1
+)
+```
+
+<img src="ordination_files/figure-gfm/GLLVM_vis-1.png" style="display: block; margin: auto;" />
+
+``` r
+par(mar = c(6, 6, 0, 0) + 0.1) # Set plot margins
+# Q-Q plot of residuals
+plot(gllvm_NB,
+  which = 2, #when which = 2, it generates a QQ norm plot
+  caption = " ", 
+  var.colors = 1, 
+  cex.lab = 2.5, 
+  cex.axis = 1.5, 
+  cex.main = 2.5, 
+  cex = 1
+) 
+```
+
+<img src="ordination_files/figure-gfm/GLLVM_vis-2.png" style="display: block; margin: auto;" />
+
+``` r
+# Ordination plots models (reproduces Figure 5)
+ordiplot(gllvm_NB,
+  which.lvs = 1:2,
+  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
+  rotate = TRUE,
+  symbols = TRUE,
+  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
+  main = "",
+  ann = FALSE
+) # Set symbols based on region
+
+title(xlab = "ordination score 1", ylab = "ordination score 2", cex.lab = 1.3)
+# Add a legend with specified colors and symbols
+legend("topleft", # Legend position
+  legend = region_names, # Legend labels
+  pch = pch_values, # Corresponding symbols
+  col = colors, # Corresponding colors (black, blue, grey)
+  ncol = 3,
+  cex = 1
+) # Arrange legend in 3 columns
+```
+
+<img src="ordination_files/figure-gfm/GLLVM_vis-3.png" style="display: block; margin: auto;" />
+
+In ordination plot, longer arrows represent covariates with the largest
+relative effects, and dark red arrows (here associated to pH) indicate
+covariates with a significant effect to ordination.
+
+## Ordination based on Gaussian copulas (GCLVM)
+
+Copula models couple marginal models for the data with a multivariate
+model that accounts for covariance across responses. Assume
+$y_{ij} \sim F_j(\mu_{ij}, \boldsymbol{\phi})$, where
+$\mu_{ij} = \mathbb{E}(y_{ij})$, and $\boldsymbol{\phi}$ includes
+possible response-specific parameters. The mean $\mu_{ij}$ is linked to
+the linear predictor via generalized linear models (GLMs):
+$$ g(\mu_{ij}) = \alpha_i + \beta_{0j} $$ where $g(\cdot)$ is a known
+link function, $\alpha_i$ and $\beta_{0j}$ are row-specific and
+column-specific intercepts,respectively. In the Gaussian copula model,
+count data $y_{ij}$ are mapped to copula values $z_{ij}$ that follow a
+multivariate normal distribution:
+$$F_j(y_{ij} - 1) \leq \Phi(z_{ij}) < F_j(y_{ij})$$ where $F_j(\cdot)$
+is the cumulative distribution function (cdf) assumed for the $j$-th
+column in the data matrix under the marginal GLM, and $\Phi(\cdot)$ is
+the cdf of the standard normal distribution. For ordination analysis,
+the copula values $z_{ij}$ are assumed to follow a factor-analytic
+model:
+$$ z_{ij} = \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i + \epsilon_{ij}, $$
+where: $\boldsymbol{u}_i$ is a $d$-dimensional latent variable
+associated with the study unit. $\boldsymbol{\lambda}_j$ is a
+$d$-dimensional vector of factor loadings. $\epsilon_{ij}$ are
+independent Gaussian errors with variances $\sigma_j^2$. The GCLVM data
+is generated based on modified code from Popovic (2021).
+
+The parameters of the copula model are estimated using a two-step
+procedure:
+
+1.  Estimate the marginal distributions $F_j(\cdot)$ using GLMs suitable
+    for sparse, overdispersed count data.
+2.  Use Monte Carlo expectation-maximization (MCEM) to estimate the
+    covariance parameters in the copula model.
+
+In place of marginal GLMs, due to the compositionality constraint, for
+the base model, we use a multivariate GLM with row effects shared by the
+different species in the data, estimated with the `gllvm` package using
+the options `num.lv=0` and `row.eff="fixed`. Alternatively, one could
+include the row effects by treating the data in the long format instead.
+
+### Example
+
+To fit the base model and the copula, use:
+
+``` r
+# Uncomment for copula ordination based on ZINB distribution
+#c_ZINB <- fit_copula(y, gllvm.fam = "ZINB", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
+
+# Copula ordination with NB distribution
+c_NB <- fit_copula(y[,1:200], gllvm.fam = "negative.binomial", reff = "fixed", sd.errors = FALSE, seed = 123, lv.n = 0)
+c_NB_ords <- scale(c_NB$scores) # extract ordinations
+head(c_NB_ords)
+```
+
+    ##      
+    ## X1       Factor1     Factor2
+    ##   AB2 -0.4488290  0.71521462
+    ##   AB3 -0.8826771  0.50708026
+    ##   AB4 -1.5333439 -0.05374471
+    ##   AB5 -0.8656592 -0.65593405
+    ##   AT2 -0.6322918  1.18339081
+    ##   AT3 -0.8984278  0.95102554
+
+Afterwards, the (unconstrained) ordination plot can be constructed with:
+
+``` r
+plot(c_NB_ords[, 1], c_NB_ords[, 2], main = "NB_GCLVM ordination plot ",
+     xlab = "PC1", ylab = "PC2", cex = 1.2,
+     col = colors[as.numeric(factor(regions))], 
+     pch = pch_values[as.numeric(factor(regions))])
+
+legend("topleft",                      
+       legend = region_names,       
+       pch = pch_values,               
+       col = colors,                    
+       ncol = 3,                        
+       cex = 1) 
+```
+
+<img src="ordination_files/figure-gfm/GCLVM_ana-1.png" style="display: block; margin: auto;" />
+
+## References
+
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-Glooretal2016" class="csl-entry">
+
+Gloor, Gregory B., Jia Rong Wu, Vera Pawlowsky-Glahn, and Juan José
+Egozcue. 2016. “It’s All Relative — Analyzing Microbiome Data as
+Compositions” 26: 322–29.
+<https://doi.org/10.1016/j.annepidem.2016.03.003>.
+
+</div>
+
+<div id="ref-Kumar2017" class="csl-entry">
+
+Kumar, Manoj, Gerald Brader, Angela Sessitsch, Minna Mäki, Jan Dirk van
+Elsas, and Riikka Nissinen. 2017. “Plants Assemble Species-Specific
+Bacterial Communities from Common Core Taxa in Three Arcto-Alpine
+Climate Zones” 8: 12. <https://doi.org/10.3389/fmicb.2017.00012>.
+
+</div>
+
+<div id="ref-Popovic2021" class="csl-entry">
+
+Popovic, Gordana. 2021. “Fast Model-Based Ordination with
+Copulas—Simulation Code (V1.0.0).”
+<https://doi.org/10.5281/zenodo.5525716>.
+
+</div>
+
+</div>
