@@ -239,56 +239,58 @@ microbial count data. GLLVMs extend generalized linear models (GLMs) by
 incorporating correlations among response variables using a
 factor-analytic approach. This allows GLLVMs to be used for model-based
 ordination for any response type. Assume
-![\boldsymbol{u}\_i = (u\_{i1}, \dots, u\_{id})^\top](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7Bu%7D_i%20%3D%20%28u_%7Bi1%7D%2C%20%5Cdots%2C%20u_%7Bid%7D%29%5E%5Ctop "\boldsymbol{u}_i = (u_{i1}, \dots, u_{id})^\top")
-is a ![d](https://latex.codecogs.com/png.latex?d "d")-dimensional latent
-variable following a standard multivariate normal distribution. In
-GLLVMs, it is assumed that, conditional on the latent variables
-![\boldsymbol{u}\_i](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7Bu%7D_i "\boldsymbol{u}_i"),
+![\boldsymbol{u}\_i = (u\_{i1}, \dots, u\_{id})^\top](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7Bu%7D_i%20%3D%20%28u_%7Bi1%7D%2C%20%5Cdots%2C%20u_%7Bid%7D%29%5E%5Ctop "\boldsymbol{u}_i = (u_{i1}, \dots, u_{id})^\top")
+is a
+![d](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;d "d")-dimensional
+latent variable following a standard multivariate normal distribution.
+In GLLVMs, it is assumed that, conditional on the latent variables
+![\boldsymbol{u}\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7Bu%7D_i "\boldsymbol{u}_i"),
 the response variables
-![y\_{ij}](https://latex.codecogs.com/png.latex?y_%7Bij%7D "y_{ij}") are
-independently distributed according to some distribution
-![F(\mu\_{ij}, \boldsymbol{\phi})](https://latex.codecogs.com/png.latex?F%28%5Cmu_%7Bij%7D%2C%20%5Cboldsymbol%7B%5Cphi%7D%29 "F(\mu_{ij}, \boldsymbol{\phi})"),
+![y\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_%7Bij%7D "y_{ij}")
+are independently distributed according to some distribution
+![F(\mu\_{ij}, \boldsymbol{\phi})](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;F%28%5Cmu_%7Bij%7D%2C%20%5Cboldsymbol%7B%5Cphi%7D%29 "F(\mu_{ij}, \boldsymbol{\phi})"),
 where
-![\mu\_{ij} = \mathbb{E}(y\_{ij} \| \boldsymbol{u}\_i)](https://latex.codecogs.com/png.latex?%5Cmu_%7Bij%7D%20%3D%20%5Cmathbb%7BE%7D%28y_%7Bij%7D%20%7C%20%5Cboldsymbol%7Bu%7D_i%29 "\mu_{ij} = \mathbb{E}(y_{ij} | \boldsymbol{u}_i)")
+![\mu\_{ij} = \mathbb{E}(y\_{ij} \| \boldsymbol{u}\_i)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_%7Bij%7D%20%3D%20%5Cmathbb%7BE%7D%28y_%7Bij%7D%20%7C%20%5Cboldsymbol%7Bu%7D_i%29 "\mu_{ij} = \mathbb{E}(y_{ij} | \boldsymbol{u}_i)")
 is the conditional mean, and
-![\boldsymbol{\phi}](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cphi%7D "\boldsymbol{\phi}")
+![\boldsymbol{\phi}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7B%5Cphi%7D "\boldsymbol{\phi}")
 includes possible response-specific parameters (e.g., dispersion or
 zero-inflation parameters). When GLLVMs are used for model-based
 ordination,
-![\mu\_{ij}](https://latex.codecogs.com/png.latex?%5Cmu_%7Bij%7D "\mu_{ij}")
+![\mu\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_%7Bij%7D "\mu_{ij}")
 is linked to the linear predictor via:
 
-![g(\mu\_{ij}) = \alpha_i + \beta\_{0j} + \boldsymbol{\lambda}\_j^\top \boldsymbol{u}\_i,](https://latex.codecogs.com/png.latex?g%28%5Cmu_%7Bij%7D%29%20%3D%20%5Calpha_i%20%2B%20%5Cbeta_%7B0j%7D%20%2B%20%5Cboldsymbol%7B%5Clambda%7D_j%5E%5Ctop%20%5Cboldsymbol%7Bu%7D_i%2C "g(\mu_{ij}) = \alpha_i + \beta_{0j} + \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i,")
+![g(\mu\_{ij}) = \alpha_i + \beta\_{0j} + \boldsymbol{\lambda}\_j^\top \boldsymbol{u}\_i,](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;g%28%5Cmu_%7Bij%7D%29%20%3D%20%5Calpha_i%20%2B%20%5Cbeta_%7B0j%7D%20%2B%20%5Cboldsymbol%7B%5Clambda%7D_j%5E%5Ctop%20%5Cboldsymbol%7Bu%7D_i%2C "g(\mu_{ij}) = \alpha_i + \beta_{0j} + \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i,")
 
 where:
 
-- ![g(\cdot)](https://latex.codecogs.com/png.latex?g%28%5Ccdot%29 "g(\cdot)")
+- ![g(\cdot)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;g%28%5Ccdot%29 "g(\cdot)")
   is a known link function (typically the log-link for count data).
-- ![\beta\_{0j}](https://latex.codecogs.com/png.latex?%5Cbeta_%7B0j%7D "\beta_{0j}")
+- ![\beta\_{0j}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_%7B0j%7D "\beta_{0j}")
   is a column-specific intercept to account for differences in column
   totals.
-- ![\boldsymbol{\lambda}\_j = (\lambda\_{j1}, \dots, \lambda\_{jd})^\top](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Clambda%7D_j%20%3D%20%28%5Clambda_%7Bj1%7D%2C%20%5Cdots%2C%20%5Clambda_%7Bjd%7D%29%5E%5Ctop "\boldsymbol{\lambda}_j = (\lambda_{j1}, \dots, \lambda_{jd})^\top")
-  is a![d](https://latex.codecogs.com/png.latex?d "d") -dimensional
-  vector of factor loadings.
-- ![\alpha_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
+- ![\boldsymbol{\lambda}\_j = (\lambda\_{j1}, \dots, \lambda\_{jd})^\top](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7B%5Clambda%7D_j%20%3D%20%28%5Clambda_%7Bj1%7D%2C%20%5Cdots%2C%20%5Clambda_%7Bjd%7D%29%5E%5Ctop "\boldsymbol{\lambda}_j = (\lambda_{j1}, \dots, \lambda_{jd})^\top")
+  is
+  a![d](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;d "d")
+  -dimensional vector of factor loadings.
+- ![\alpha_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_i "\alpha_i")
   is a row-specific intercept to account for differences in row totals.
 
 To ensure model identifiability, the upper triangular part of the factor
 loading matrix
-![\boldsymbol{\Lambda} = \[\boldsymbol{\lambda}\_1 \cdots \boldsymbol{\lambda}\_m\]^\top](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5CLambda%7D%20%3D%20%5B%5Cboldsymbol%7B%5Clambda%7D_1%20%5Ccdots%20%5Cboldsymbol%7B%5Clambda%7D_m%5D%5E%5Ctop "\boldsymbol{\Lambda} = [\boldsymbol{\lambda}_1 \cdots \boldsymbol{\lambda}_m]^\top")
+![\boldsymbol{\Lambda} = \[\boldsymbol{\lambda}\_1 \cdots \boldsymbol{\lambda}\_m\]^\top](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7B%5CLambda%7D%20%3D%20%5B%5Cboldsymbol%7B%5Clambda%7D_1%20%5Ccdots%20%5Cboldsymbol%7B%5Clambda%7D_m%5D%5E%5Ctop "\boldsymbol{\Lambda} = [\boldsymbol{\lambda}_1 \cdots \boldsymbol{\lambda}_m]^\top")
 is set to zero, and its diagonal elements are set to positive values.
 The `gllvm` package implements the **zero-inflated negative binomial
 (ZINB)** (`family = "ZINB"`) and **negative binomial (NB)**
 (`family = "negative.binomial"`) GLLVMs to better handle datasets with a
 large number of zeros. These models are particularly suited for
 overdispersed count data, where excess zeros are common. For non-normal
-response data, estimation is typically based on pproximate marginal
+response data, estimation is typically based on approximate marginal
 likelihood using variational approximations (VA) or Laplace’s
 approximation (LA).
 
 ### Example
 
-To speed up computationsm, one could first, enable parallelization for
+To speed up computations, one could first enable parallelization for
 `gllvm` e.g., with:
 
 ``` r
@@ -433,62 +435,64 @@ covariates with a significant effect to ordination.
 
 Copula models couple marginal models for the data with a multivariate
 model that accounts for covariance across responses. Assume
-![y\_{ij} \sim F_j(\mu\_{ij}, \boldsymbol{\phi})](https://latex.codecogs.com/png.latex?y_%7Bij%7D%20%5Csim%20F_j%28%5Cmu_%7Bij%7D%2C%20%5Cboldsymbol%7B%5Cphi%7D%29 "y_{ij} \sim F_j(\mu_{ij}, \boldsymbol{\phi})"),
+![y\_{ij} \sim F_j(\mu\_{ij}, \boldsymbol{\phi})](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_%7Bij%7D%20%5Csim%20F_j%28%5Cmu_%7Bij%7D%2C%20%5Cboldsymbol%7B%5Cphi%7D%29 "y_{ij} \sim F_j(\mu_{ij}, \boldsymbol{\phi})"),
 where
-![\mu\_{ij} = \mathbb{E}(y\_{ij})](https://latex.codecogs.com/png.latex?%5Cmu_%7Bij%7D%20%3D%20%5Cmathbb%7BE%7D%28y_%7Bij%7D%29 "\mu_{ij} = \mathbb{E}(y_{ij})"),
+![\mu\_{ij} = \mathbb{E}(y\_{ij})](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_%7Bij%7D%20%3D%20%5Cmathbb%7BE%7D%28y_%7Bij%7D%29 "\mu_{ij} = \mathbb{E}(y_{ij})"),
 and
-![\boldsymbol{\phi}](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Cphi%7D "\boldsymbol{\phi}")
+![\boldsymbol{\phi}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7B%5Cphi%7D "\boldsymbol{\phi}")
 includes possible response-specific parameters. The mean
-![\mu\_{ij}](https://latex.codecogs.com/png.latex?%5Cmu_%7Bij%7D "\mu_{ij}")
+![\mu\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_%7Bij%7D "\mu_{ij}")
 is linked to the linear predictor via generalized linear models (GLMs):
 
-![g(\mu\_{ij}) = \alpha_i + \beta\_{0j}](https://latex.codecogs.com/png.latex?g%28%5Cmu_%7Bij%7D%29%20%3D%20%5Calpha_i%20%2B%20%5Cbeta_%7B0j%7D "g(\mu_{ij}) = \alpha_i + \beta_{0j}")
+![g(\mu\_{ij}) = \alpha_i + \beta\_{0j}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;g%28%5Cmu_%7Bij%7D%29%20%3D%20%5Calpha_i%20%2B%20%5Cbeta_%7B0j%7D "g(\mu_{ij}) = \alpha_i + \beta_{0j}")
 
 where
-![g(\cdot)](https://latex.codecogs.com/png.latex?g%28%5Ccdot%29 "g(\cdot)")
+![g(\cdot)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;g%28%5Ccdot%29 "g(\cdot)")
 is a known link function,
-![\alpha_i](https://latex.codecogs.com/png.latex?%5Calpha_i "\alpha_i")
+![\alpha_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Calpha_i "\alpha_i")
 and
-![\beta\_{0j}](https://latex.codecogs.com/png.latex?%5Cbeta_%7B0j%7D "\beta_{0j}")
+![\beta\_{0j}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cbeta_%7B0j%7D "\beta_{0j}")
 are row-specific and column-specific intercepts,respectively. In the
 Gaussian copula model, count data
-![y\_{ij}](https://latex.codecogs.com/png.latex?y_%7Bij%7D "y_{ij}") are
-mapped to copula values
-![z\_{ij}](https://latex.codecogs.com/png.latex?z_%7Bij%7D "z_{ij}")
+![y\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;y_%7Bij%7D "y_{ij}")
+are mapped to copula values
+![z\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;z_%7Bij%7D "z_{ij}")
 that follow a multivariate normal distribution:
 
-![F_j(y\_{ij} - 1) \leq \Phi(z\_{ij}) \< F_j(y\_{ij})](https://latex.codecogs.com/png.latex?F_j%28y_%7Bij%7D%20-%201%29%20%5Cleq%20%5CPhi%28z_%7Bij%7D%29%20%3C%20F_j%28y_%7Bij%7D%29 "F_j(y_{ij} - 1) \leq \Phi(z_{ij}) < F_j(y_{ij})")
+![F_j(y\_{ij} - 1) \leq \Phi(z\_{ij}) \< F_j(y\_{ij})](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;F_j%28y_%7Bij%7D%20-%201%29%20%5Cleq%20%5CPhi%28z_%7Bij%7D%29%20%3C%20F_j%28y_%7Bij%7D%29 "F_j(y_{ij} - 1) \leq \Phi(z_{ij}) < F_j(y_{ij})")
 
 where
-![F_j(\cdot)](https://latex.codecogs.com/png.latex?F_j%28%5Ccdot%29 "F_j(\cdot)")
+![F_j(\cdot)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;F_j%28%5Ccdot%29 "F_j(\cdot)")
 is the cumulative distribution function (cdf) assumed for the
-![j](https://latex.codecogs.com/png.latex?j "j")-th column in the data
-matrix under the marginal GLM, and
-![\Phi(\cdot)](https://latex.codecogs.com/png.latex?%5CPhi%28%5Ccdot%29 "\Phi(\cdot)")
+![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")-th
+column in the data matrix under the marginal GLM, and
+![\Phi(\cdot)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CPhi%28%5Ccdot%29 "\Phi(\cdot)")
 is the cdf of the standard normal distribution. For ordination analysis,
 the copula values
-![z\_{ij}](https://latex.codecogs.com/png.latex?z_%7Bij%7D "z_{ij}") are
-assumed to follow a factor-analytic model:
+![z\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;z_%7Bij%7D "z_{ij}")
+are assumed to follow a factor-analytic model:
 
-![z\_{ij} = \boldsymbol{\lambda}\_j^\top \boldsymbol{u}\_i + \epsilon\_{ij},](https://latex.codecogs.com/png.latex?z_%7Bij%7D%20%3D%20%5Cboldsymbol%7B%5Clambda%7D_j%5E%5Ctop%20%5Cboldsymbol%7Bu%7D_i%20%2B%20%5Cepsilon_%7Bij%7D%2C "z_{ij} = \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i + \epsilon_{ij},")
+![z\_{ij} = \boldsymbol{\lambda}\_j^\top \boldsymbol{u}\_i + \epsilon\_{ij},](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;z_%7Bij%7D%20%3D%20%5Cboldsymbol%7B%5Clambda%7D_j%5E%5Ctop%20%5Cboldsymbol%7Bu%7D_i%20%2B%20%5Cepsilon_%7Bij%7D%2C "z_{ij} = \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i + \epsilon_{ij},")
 
 where:
-![\boldsymbol{u}\_i](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7Bu%7D_i "\boldsymbol{u}_i")
-is a ![d](https://latex.codecogs.com/png.latex?d "d")-dimensional latent
-variable associated with the study unit.
-![\boldsymbol{\lambda}\_j](https://latex.codecogs.com/png.latex?%5Cboldsymbol%7B%5Clambda%7D_j "\boldsymbol{\lambda}_j")
-is a ![d](https://latex.codecogs.com/png.latex?d "d")-dimensional vector
-of factor loadings.
-![\epsilon\_{ij}](https://latex.codecogs.com/png.latex?%5Cepsilon_%7Bij%7D "\epsilon_{ij}")
+![\boldsymbol{u}\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7Bu%7D_i "\boldsymbol{u}_i")
+is a
+![d](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;d "d")-dimensional
+latent variable associated with the study unit.
+![\boldsymbol{\lambda}\_j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%7B%5Clambda%7D_j "\boldsymbol{\lambda}_j")
+is a
+![d](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;d "d")-dimensional
+vector of factor loadings.
+![\epsilon\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cepsilon_%7Bij%7D "\epsilon_{ij}")
 are independent Gaussian errors with variances
-![\sigma_j^2](https://latex.codecogs.com/png.latex?%5Csigma_j%5E2 "\sigma_j^2").
+![\sigma_j^2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Csigma_j%5E2 "\sigma_j^2").
 The GCLVM data is generated based on modified code from Popovic (2021).
 
 The parameters of the copula model are estimated using a two-step
 procedure:
 
 1.  Estimate the marginal distributions
-    ![F_j(\cdot)](https://latex.codecogs.com/png.latex?F_j%28%5Ccdot%29 "F_j(\cdot)")
+    ![F_j(\cdot)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;F_j%28%5Ccdot%29 "F_j(\cdot)")
     using GLMs suitable for sparse, overdispersed count data.
 2.  Use Monte Carlo expectation-maximization (MCEM) to estimate the
     covariance parameters in the copula model.
@@ -515,12 +519,12 @@ head(c_NB_ords)
 
     ##      
     ## X1       Factor1     Factor2
-    ##   AB2 -0.4488274  0.71521557
-    ##   AB3 -0.8826769  0.50708407
-    ##   AB4 -1.5333398 -0.05373775
-    ##   AB5 -0.8656596 -0.65593068
-    ##   AT2 -0.6322867  1.18339204
-    ##   AT3 -0.8984265  0.95103012
+    ##   AB2 -0.4488147  0.71521206
+    ##   AB3 -0.8826553  0.50707155
+    ##   AB4 -1.5333177 -0.05376644
+    ##   AB5 -0.8656459 -0.65594848
+    ##   AT2 -0.6322704  1.18338433
+    ##   AT3 -0.8984004  0.95101328
 
 Afterwards, the (unconstrained) ordination plot can be constructed with:
 

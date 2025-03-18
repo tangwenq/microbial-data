@@ -4,7 +4,7 @@ author: "Wenqi Tang"
 date: "2025-03-18"
 output: 
   github_document:
-    pandoc_args: --webtex
+    math_method: "webtex"
 editor_options:
   markdown:
     wrap: 72
@@ -195,18 +195,19 @@ legend("topleft",
 ## Ordination based on latent variable models (GLLVM)
 
 Generalized linear latent variable models (GLLVMs) provide a flexible framework for jointly modeling multivariate response data, such as microbial count data. GLLVMs extend generalized linear models (GLMs) by incorporating correlations among response variables using a factor-analytic approach. This allows GLLVMs to be used for model-based ordination for any response type. Assume $\boldsymbol{u}_i = (u_{i1}, \dots, u_{id})^\top$ is a $d$-dimensional latent variable following a standard multivariate normal distribution. In GLLVMs, it is assumed that, conditional on the latent variables $\boldsymbol{u}_i$, the response variables $y_{ij}$ are independently distributed according to some distribution $F(\mu_{ij}, \boldsymbol{\phi})$, where $\mu_{ij} = \mathbb{E}(y_{ij} | \boldsymbol{u}_i)$ is the conditional mean, and $\boldsymbol{\phi}$ includes possible response-specific parameters (e.g., dispersion or zero-inflation parameters). When GLLVMs are used for model-based ordination, $\mu_{ij}$ is linked to the linear predictor via: 
-$$ g(\mu_{ij}) = \alpha_i + \beta_{0j} + \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i,$$ where: 
+$$ g(\mu_{ij}) = \alpha_i + \beta_{0j} + \boldsymbol{\lambda}_j^\top \boldsymbol{u}_i,$$ 
+where:
 
 * $g(\cdot)$ is a known link function (typically the log-link for count data). 
 * $\beta_{0j}$ is a column-specific intercept to account for differences in column totals.
 * $\boldsymbol{\lambda}_j = (\lambda_{j1}, \dots, \lambda_{jd})^\top$ is a$d$ -dimensional vector of factor loadings. 
 * $\alpha_i$ is a row-specific intercept to account for differences in row totals.
 
-To ensure model identifiability, the upper triangular part of the factor loading matrix $\boldsymbol{\Lambda} = [\boldsymbol{\lambda}_1 \cdots \boldsymbol{\lambda}_m]^\top$ is set to zero, and its diagonal elements are set to positive values. The `gllvm` package implements the **zero-inflated negative binomial (ZINB)** (`family = "ZINB"`) and **negative binomial (NB)** (`family = "negative.binomial"`) GLLVMs to better handle datasets with a large number of zeros. These models are particularly suited for overdispersed count data, where excess zeros are common. For non-normal response data, estimation is typically based on pproximate marginal likelihood using variational approximations (VA) or Laplace's approximation (LA). 
+To ensure model identifiability, the upper triangular part of the factor loading matrix $\boldsymbol{\Lambda} = [\boldsymbol{\lambda}_1 \cdots \boldsymbol{\lambda}_m]^\top$ is set to zero, and its diagonal elements are set to positive values. The `gllvm` package implements the **zero-inflated negative binomial (ZINB)** (`family = "ZINB"`) and **negative binomial (NB)** (`family = "negative.binomial"`) GLLVMs to better handle datasets with a large number of zeros. These models are particularly suited for overdispersed count data, where excess zeros are common. For non-normal response data, estimation is typically based on approximate marginal likelihood using variational approximations (VA) or Laplace's approximation (LA). 
 
 ### Example
 
-To speed up computationsm, one could first, enable parallelization for `gllvm` e.g., with:
+To speed up computations, one could first enable parallelization for `gllvm` e.g., with:
 ```{r parallel, results=FALSE, message=FALSE, eval=FALSE}
 TMB::openmp(n = parallel::detectCores()-1, autopar = TRUE, DLL = "gllvm")
 ```
@@ -240,8 +241,8 @@ BIC(gllvm_NB)
 
 Additionally,
 
-* The estimate pH(CLV1) = -0.135067, p < 0.001, indicates that pH has a **negative influence** on the first latent variable (CLV1), and the p-value (\< 0.001) suggests that this effect is **statistically significant**.
-* The estimate pH(CLV2) = 0.034117, p < 0.001, indicates that pH has a **positive influence** on the second latent variable (CLV2), and the p-value (\< 0.001) suggests that this effect is **statistically significant**.
+* The estimate pH(CLV1) = -0.135067, p < 0.001, indicates that pH has a **negative influence** on the first latent variable (CLV1), and the p-value (< 0.001) suggests that this effect is **statistically significant**.
+* The estimate pH(CLV2) = 0.034117, p < 0.001, indicates that pH has a **positive influence** on the second latent variable (CLV2), and the p-value (< 0.001) suggests that this effect is **statistically significant**.
 
 From these results, we can conclude that the **NB-GLLVM model successfully captures the effects of environmental variables (particularly pH) on microbial community structure**. This conclusion is also supported by the following ordination plot, where pH is represented by dark red arrows, indicating its strong influence.
 
