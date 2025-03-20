@@ -1,7 +1,7 @@
 Workflow illustration to compare ordination methods in the analysis of
 high-dimensional compositional count data using a  microbiome data set
 ================
-Wenqi tang
+Wenqi Tang
 2025-03-20
 
 This document reproduces the main content of the introduction and
