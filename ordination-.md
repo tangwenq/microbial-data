@@ -333,10 +333,10 @@ To fit the model:
 X <- scale(microbialdata$Xenv[, c("SOM", "pH", "Phosp")])
 
 # Uncomment to fit unconstrained model
-#ungllvm_NB <- gllvm(
-  #y = y, family = "negative.binomial", sd.errors = FALSE,
- # row.eff = "fixed", num.lv = 2, seed = 123
-#)
+ungllvm_NB <- gllvm(
+  y = y, family = "negative.binomial", sd.errors = FALSE,
+  row.eff = "fixed", num.lv = 2, seed = 123
+)
 
 
 # Constrained concurrent model
