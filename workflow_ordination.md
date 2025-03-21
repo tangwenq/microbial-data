@@ -1,8 +1,8 @@
 Workflow illustration to compare ordination methods in the analysis of
 high-dimensional compositional count data using a  microbiome data set
 ================
-Wenqi Tang
-2025-03-20
+Wenqi Tang, Pekka Korhonen, Jenni Niku, Klaus Nordhausen and Sara Taskinen
+2025-03-21
 
 This document reproduces the main content of the introduction and
 simulation section of the paper **Comparing model-based unconstrained
@@ -222,7 +222,7 @@ region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
 
 # draw ordination plot for nMDS
 
-plot(pca_ords[, 1], pca_ords[, 2], type = "n", 
+plot(clrmds_ords[, 1], clrmds_ords[, 2], type = "n", 
      xlab = "ordination score 1", ylab = "ordination score 2", main = "nMDS of CLR-transformed Data")
 points(clrmds_ords[, 1], clrmds_ords[, 2], col = colors[as.numeric(factor(regions))], 
        pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
@@ -324,17 +324,19 @@ approximation (LA).
 
 ## Example
 
-It should be noted that the following code spend much time to run the
-result and we can speed up computations by enabling parallelization for
-`gllvm` with the following code:
-`TMB::openmp(n = parallel::detectCores() - 1, autopar = TRUE, DLL = "gllvm")`
-This code should be executed before fitting the model with `gllvm()`.
-However, due to randomness, the final results may differ slightly from
-those presented here. Additionally, since the `gllvm` package on GitHub
-is continuously updated, using the latest version installed via
-`devtools::install_github("JenniNiku/gllvm")` may also lead to slightly
-different results. Nevertheless, these differences will not be
-substantial.
+It should be noted that the following code takes considerable time to
+run, and we can speed up computations by enabling parallelization for
+`gllvm` with the following command:
+`TMB::openmp(n = parallel::detectCores() - 1, autopar = TRUE, DLL = "gllvm")`.
+This command should be executed before fitting the model with
+`gllvm()`.However, due to the algorithmic nature of the methods used,
+enabling parallelization or using different versions that might
+initialize parameters differently can lead to slight variations in the
+final results. Additionally, as the `gllvm` package on GitHub is
+continuously updated, installing the latest version via
+`devtools::install_github("JenniNiku/gllvm")` may also introduce minor
+differences. Despite these small variations, the overall results and
+conclusions will remain consistent.
 
 To fit the model:
 
