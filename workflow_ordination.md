@@ -222,10 +222,13 @@ region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
 
 # draw ordination plot for nMDS
 
-plot(clrmds_ords[, 1], clrmds_ords[, 2], type = "n", 
-     xlab = "ordination score 1", ylab = "ordination score 2", main = "nMDS of CLR-transformed Data")
-points(clrmds_ords[, 1], clrmds_ords[, 2], col = colors[as.numeric(factor(regions))], 
-       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
+plot(clrmds_ords[, 1], clrmds_ords[, 2],
+        col = colors[as.numeric(factor(regions))],
+        pch = pch_values[as.numeric(factor(regions))],
+        cex = 1.2,
+        xlab = "ordination score 1",
+        ylab = "ordination score 2",
+        main = "nMDS of CLR-transformed Data")
 
 
 legend("topleft",                      
@@ -240,10 +243,14 @@ legend("topleft",
 
 ``` r
 # draw ordination plot for pca
-plot(pca_ords[, 1], pca_ords[, 2], type = "n", 
-     xlab = "ordination score 1", ylab = "ordination score 2", main = "PCA of CLR-transformed Data")
-points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(factor(regions))], 
-       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
+plot(pca_ords[, 1], pca_ords[, 2],
+        col = colors[as.numeric(factor(regions))],
+        pch = pch_values[as.numeric(factor(regions))],
+        cex = 1.2,
+        xlab = "ordination score 1",
+        ylab = "ordination score 2",
+        main = "PCA of CLR-transformed Data")
+
 
 
 legend("topleft",                      
