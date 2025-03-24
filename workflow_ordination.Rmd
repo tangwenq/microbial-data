@@ -391,10 +391,10 @@ plot(gllvm_NB,
 # Ordination plots models (reproduces Figure 5)
 ordiplot(gllvm_NB,
   which.lvs = 1:2,
-  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
+  s.colors = plot_colors,
   rotate = TRUE,
   symbols = TRUE,
-  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
+  pch = plot_pch,
   main = "",
   ann = FALSE
 ) # Set symbols based on region
