@@ -222,14 +222,14 @@ region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
 
 # draw ordination plot for nMDS
 
+
 plot(clrmds_ords[, 1], clrmds_ords[, 2],
-        col = colors[as.numeric(factor(regions))],
-        pch = pch_values[as.numeric(factor(regions))],
+        col = colors,
+        pch = pch_values,
         cex = 1.2,
         xlab = "ordination score 1",
         ylab = "ordination score 2",
         main = "nMDS of CLR-transformed Data")
-
 
 legend("topleft",                      
        legend = region_names,       
@@ -244,13 +244,12 @@ legend("topleft",
 ``` r
 # draw ordination plot for pca
 plot(pca_ords[, 1], pca_ords[, 2],
-        col = colors[as.numeric(factor(regions))],
-        pch = pch_values[as.numeric(factor(regions))],
+        col = colors,
+        pch = pch_values,
         cex = 1.2,
         xlab = "ordination score 1",
         ylab = "ordination score 2",
         main = "PCA of CLR-transformed Data")
-
 
 
 legend("topleft",                      
@@ -691,11 +690,17 @@ obj
     ## BIC:  163242.1
 
 ``` r
-# draw ordination plot for pca
-plot( c_NB_ords[, 1],  c_NB_ords[, 2], type = "n", 
-     xlab = "PC1", ylab = "PC2", main = "NB_GCLVM ordination plot ")
-points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(factor(regions))], 
-       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
+# draw ordination plot for NB-GCLVM
+
+
+plot(c_NB_ords[, 1], c_NB_ords[, 2],
+        col = colors,
+        pch = pch_values,
+        cex = 1.2,
+        xlab = "ordination score 1",
+        ylab = "ordination score 2",
+        main = "NB_GCLVM ordination plot")
+
 
 
 legend("topleft",                      
@@ -704,6 +709,7 @@ legend("topleft",
        col = colors,                    
        ncol = 3,                        
        cex = 1) 
+
 ```
 
 <img src="workflow_ordination_files/figure-gfm/GCLVM_ana-1.png" style="display: block; margin: auto;" />
