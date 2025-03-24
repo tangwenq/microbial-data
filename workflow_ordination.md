@@ -210,52 +210,51 @@ are lack of a probabilistic framework, challenges in handling zero
 values.
 
 ``` r
-# Extract unique regions and symbols
-regions <- unique(microbialdata$X$Region) # Unique region names
-pch_values <- as.numeric(factor(regions)) + 15 # Define symbols manually: circle (15), triangle (16), plus (17)
-colors <- c("black", "blue", "grey")[as.numeric(factor(regions))] # Set specific colors for each region
+unique_pch <- c(16, 17, 18)       # Mayrhofen=16, Kilpisjarvi=17, Ny-Alesund=18
+unique_colors <- c("black", "blue", "grey") 
 
-
-region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
-
+plot_pch <- unique_pch[as.numeric(factor(microbialdata$X$Region))]
+plot_colors <- unique_colors[as.numeric(factor(microbialdata$X$Region))]
 
 
 # draw ordination plot for nMDS
-
-
 plot(clrmds_ords[, 1], clrmds_ords[, 2],
-        col = colors,
-        pch = pch_values,
-        cex = 1.2,
-        xlab = "ordination score 1",
-        ylab = "ordination score 2",
-        main = "nMDS of CLR-transformed Data")
+     col = plot_colors,
+     pch = plot_pch,
+     cex = 1.2,
+     xlab = "ordination score 1",
+     ylab = "ordination score 2",
+     main = "nMDS of CLR-transformed Data")
+
 
 legend("topleft",                      
-       legend = region_names,       
-       pch = pch_values,               
-       col = colors,                    
+       legend = c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund"),       
+       pch = unique_pch,               
+       col = unique_colors,                    
        ncol = 3,                        
-       cex = 1)  
+       cex = 1)
+
+
+
 ```
 
 <img src="workflow_ordination_files/figure-gfm/classical_vis-1.png" style="display: block; margin: auto;" />
 
 ``` r
-# draw ordination plot for pca
+# draw ordination plot for PCA
 plot(pca_ords[, 1], pca_ords[, 2],
-        col = colors,
-        pch = pch_values,
-        cex = 1.2,
-        xlab = "ordination score 1",
-        ylab = "ordination score 2",
-        main = "PCA of CLR-transformed Data")
+     col = plot_colors,
+     pch = plot_pch,
+     cex = 1.2,
+     xlab = "ordination score 1",
+     ylab = "ordination score 2",
+     main = "PCA of CLR-transformed Data")
 
 
 legend("topleft",                      
-       legend = region_names,       
-       pch = pch_values,               
-       col = colors,                    
+       legend = c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund"),       
+       pch = unique_pch,               
+       col = unique_colors,                    
        ncol = 3,                        
        cex = 1)
 ```
@@ -490,10 +489,10 @@ plot(gllvm_NB,
 # Ordination plots models (reproduces Figure 5)
 ordiplot(gllvm_NB,
   which.lvs = 1:2,
-  s.colors = c("black", "blue", "grey")[as.numeric(factor(microbialdata$X$Region))],
+  s.colors = plot_colors,
   rotate = TRUE,
   symbols = TRUE,
-  pch = as.numeric(factor(microbialdata$X$Region)) + 15,
+  pch = plot_pch,
   main = "",
   ann = FALSE
 ) # Set symbols based on region
@@ -501,9 +500,9 @@ ordiplot(gllvm_NB,
 title(xlab = "ordination score 1", ylab = "ordination score 2", cex.lab = 1.3)
 # Add a legend with specified colors and symbols
 legend("topleft", # Legend position
-  legend = region_names, # Legend labels
-  pch = pch_values, # Corresponding symbols
-  col = colors, # Corresponding colors (black, blue, grey)
+  legend = c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund"), # Legend labels
+  pch = unique_pch, # Corresponding symbols
+  col = unique_colors, # Corresponding colors (black, blue, grey)
   ncol = 3,
   cex = 1
 ) # Arrange legend in 3 columns
@@ -693,22 +692,23 @@ obj
 # draw ordination plot for NB-GCLVM
 
 
+# draw ordination plot for PCA
 plot(c_NB_ords[, 1], c_NB_ords[, 2],
-        col = colors,
-        pch = pch_values,
-        cex = 1.2,
-        xlab = "ordination score 1",
-        ylab = "ordination score 2",
-        main = "NB_GCLVM ordination plot")
-
+     col = plot_colors,
+     pch = plot_pch,
+     cex = 1.2,
+     xlab = "ordination score 1",
+     ylab = "ordination score 2",
+     main = "NB_GCLVM ordination plot")
 
 
 legend("topleft",                      
-       legend = region_names,       
-       pch = pch_values,               
-       col = colors,                    
+       legend = c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund"),       
+       pch = unique_pch,               
+       col = unique_colors,                    
        ncol = 3,                        
-       cex = 1) 
+       cex = 1)
+
 
 ```
 
