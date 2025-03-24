@@ -224,13 +224,12 @@ region_names <- c("Mayrhofen", "Kilpisjarvi", "Ny-Alesund")
 
 
 plot(clrmds_ords[, 1], clrmds_ords[, 2],
-        col = colors[as.numeric(factor(regions))],
-        pch = pch_values[as.numeric(factor(regions))],
+        col = colors,
+        pch = pch_values,
         cex = 1.2,
         xlab = "ordination score 1",
         ylab = "ordination score 2",
         main = "nMDS of CLR-transformed Data")
-
 
 legend("topleft",                      
        legend = region_names,       
@@ -243,8 +242,8 @@ legend("topleft",
 # draw ordination plot for pca
 
 plot(pca_ords[, 1], pca_ords[, 2],
-        col = colors[as.numeric(factor(regions))],
-        pch = pch_values[as.numeric(factor(regions))],
+        col = colors,
+        pch = pch_values,
         cex = 1.2,
         xlab = "ordination score 1",
         ylab = "ordination score 2",
@@ -344,6 +343,7 @@ gllvm_NB <- gllvm(
 )
 
 scale(gllvm_NB$lvs) # extract ordinations
+
 
 
 ```
@@ -472,6 +472,9 @@ include the row effects by treating the data in the long format instead.
     
     c_NB_ords <- scale(c_NB$scores)# extract ordinations
 c_NB_ords
+
+
+
 ```
 
 we can use following code to draw ordination plot and extract model to
@@ -480,11 +483,17 @@ check AIC and BIC.
 ```{r GCLVM_ana, echo=TRUE}
 obj = c_NB$obj #extract model
 obj
-# draw ordination plot for pca
-plot( c_NB_ords[, 1],  c_NB_ords[, 2], type = "n", 
-     xlab = "PC1", ylab = "PC2", main = "NB_GCLVM ordination plot ")
-points(pca_ords[, 1], pca_ords[, 2], col = colors[as.numeric(factor(regions))], 
-       pch = pch_values[as.numeric(factor(regions))], cex = 1.2) 
+# draw ordination plot for NB-GCLVM
+
+
+plot(c_NB_ords[, 1], c_NB_ords[, 2],
+        col = colors,
+        pch = pch_values,
+        cex = 1.2,
+        xlab = "ordination score 1",
+        ylab = "ordination score 2",
+        main = "NB_GCLVM ordination plot")
+
 
 
 legend("topleft",                      
@@ -493,6 +502,11 @@ legend("topleft",
        col = colors,                    
        ncol = 3,                        
        cex = 1) 
+
+
+
+
+
 
 ```
 
